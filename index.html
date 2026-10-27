@@ -641,11 +641,39 @@ function renderPortalMenuLinks(items){
   });
   return true;
 }
+// Pautan menu setempat berdasarkan rekod yang telah disahkan pengguna.
+// Pautan guru menggunakan tab baharu; akses kandungan sebenar tetap bergantung pada kebenaran Google Sites/Drive.
+const LOCAL_MENU_URLS={
+  'Pautan Penting':'https://linktr.ee/myintek',
+  'Linktree myINTEK':'https://linktr.ee/myintek',
+  'Pengurusan & Pentadbiran':'https://sites.google.com/moe-dl.edu.my/dashboardintek23/pengurusan-dan-pentadbiran',
+  'Perkara berkaitan Pengurusan & Pentadbiran':'https://sites.google.com/moe-dl.edu.my/dashboardintek23/pengurusan-dan-pentadbiran',
+  'Kurikulum':'https://sites.google.com/moe-dl.edu.my/dashboardintek23/kurikulum',
+  'Pautan Panitia mengikut Bidang':'https://sites.google.com/moe-dl.edu.my/dashboardintek23/kurikulum',
+  'Hal Ehwal Murid':'https://sites.google.com/moe-dl.edu.my/dashboardintek23/hal-ehwal-murid',
+  'Perkara berkaitan Unit-unit HEM':'https://sites.google.com/moe-dl.edu.my/dashboardintek23/hal-ehwal-murid',
+  'Kokurikulum':'https://sites.google.com/moe-dl.edu.my/dashboardintek23/kokurikulum',
+  'Kokurikulum dan Album':'https://sites.google.com/moe-dl.edu.my/dashboardintek23/kokurikulum',
+  'PIBG':'https://drive.google.com/drive/u/0/folders/1q3Ag_3eFY5nGBjYZoJX4QxJYBG-gGOzc',
+  'PIBG INTEK':'https://drive.google.com/drive/u/0/folders/1q3Ag_3eFY5nGBjYZoJX4QxJYBG-gGOzc',
+  'KGSIN':'https://drive.google.com/drive/folders/1ZTLzmdJln0_5jvN1v_mvxdeaExdDI9xI',
+  'Kelab Guru & Staf INTEK':'https://drive.google.com/drive/folders/1ZTLzmdJln0_5jvN1v_mvxdeaExdDI9xI',
+  'Galeri INTEK':'https://drive.google.com/drive/u/0/folders/1Hrzfh16OgioGzR1T-732432q9-SeDa2e',
+  'Direktori Majalah INTEGRITI':'https://drive.google.com/drive/u/0/folders/1Hrzfh16OgioGzR1T-732432q9-SeDa2e'
+};
 function handlePortalMenuClick(button){
   const type=button.dataset.menuType;
   const label=button.dataset.menuLabel||button.textContent.trim();
   $$('.nav button').forEach(n=>n.classList.remove('active'));
   button.classList.add('active');
+  if(label==='Utama'){
+    const announcements=document.getElementById('announcementsPanel');
+    if(announcements) announcements.scrollIntoView({behavior:'smooth',block:'start'});
+    else toast('Bahagian Pengumuman Penting belum tersedia.');
+    return;
+  }
+  const localUrl=LOCAL_MENU_URLS[label];
+  if(localUrl){window.open(localUrl,'_blank','noopener,noreferrer');return;}
   if(type==='url'){
     const url=button.dataset.menuUrl||'';
     if(/^https:\/\/\S+$/i.test(url)){window.open(url,'_blank','noopener,noreferrer');}
@@ -781,6 +809,13 @@ $('.nav').addEventListener('click',e=>{
   if(!b.hasAttribute('data-section')) return;
   $$('.nav button').forEach(n=>n.classList.remove('active'));b.classList.add('active');
   const label=b.textContent.trim();
+  if(label==='Utama'){
+    const announcements=document.getElementById('announcementsPanel');
+    if(announcements) announcements.scrollIntoView({behavior:'smooth',block:'start'});
+    else toast('Bahagian Pengumuman Penting belum tersedia.');
+    return;
+  }
+  if(LOCAL_MENU_URLS[label]){window.open(LOCAL_MENU_URLS[label],'_blank','noopener,noreferrer');return;}
   const navTargets={'Utama':'home','Pengurusan & Pentadbiran':'quick','Kurikulum':'quick','Hal Ehwal Murid':'enrolment','Kokurikulum':'events','PIBG':'quick','Alumni':'quick','KGSIN':'quick','Pautan Penting':'quick','Galeri INTEK':'slider'};
   if(label==='Alumni INTEK'&&OFFICIAL_LINKS['Alumni INTEK']){window.open(OFFICIAL_LINKS['Alumni INTEK'],'_blank','noopener,noreferrer');return;}
   const targetId=navTargets[label]||b.dataset.section;
