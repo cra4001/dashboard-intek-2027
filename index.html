@@ -769,10 +769,11 @@ function renderPortalSlides(items){
   let dots=slider.querySelector('.slider-dots');
   if(!dots){dots=document.createElement('div');dots.className='slider-dots';slider.append(dots)}
   dots.replaceChildren();
-  active.slice(0,12).forEach((item,i)=>{
+  active.slice(0,7).forEach((item,i)=>{
     const figure=document.createElement('figure');
     figure.className='slide'+(i===0?' active':'');
     const img=document.createElement('img');
+    img.referrerPolicy='no-referrer';
     img.src=String(item.imageUrl).trim();
     img.alt=String(item.caption||('Foto INTEK '+(i+1)));
     img.loading=i===0?'eager':'lazy';
