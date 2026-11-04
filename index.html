@@ -332,6 +332,123 @@ footer{padding:15px 3px 3px;display:flex;justify-content:space-between;gap:12px;
 
 
 .calendar-events-note{font-size:.68rem;line-height:1.45;color:var(--muted);margin:8px 0 0}.calendar-events-empty{padding:12px 0;font-size:.74rem;color:var(--muted)}
+
+/* ===== INFO MINGGUAN INTEK ===== */
+.weekly-info-section {
+  width: 100%;
+  margin: 18px auto;
+  padding: 0 16px;
+  max-width: 1400px;
+  color: var(--text-color, #17324d);
+}
+
+.weekly-info-heading {
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  margin: 0 0 14px;
+  color: var(--primary-color, #174b83);
+}
+
+.weekly-info-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.weekly-info-card {
+  padding: 18px 20px;
+  border: 1px solid rgba(40, 100, 160, 0.16);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 4px 14px rgba(20, 50, 80, 0.07);
+}
+
+.weekly-info-label {
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #55728f;
+  margin-bottom: 8px;
+}
+
+.weekly-info-value {
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1.4;
+  color: #174b83;
+}
+
+.weekly-info-description {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-top: 7px;
+  color: #526579;
+}
+
+.weekly-teachers-heading {
+  margin: 20px 0 10px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--primary-color, #174b83);
+}
+
+.weekly-teachers-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.weekly-teacher-card {
+  padding: 13px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(40, 100, 160, 0.14);
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #294b6b;
+  box-shadow: 0 3px 10px rgba(20, 50, 80, 0.05);
+}
+
+.weekly-info-empty {
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 760px) {
+  .weekly-info-section {
+    padding: 0 10px;
+    margin: 14px auto;
+  }
+
+  .weekly-info-cards {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .weekly-info-card {
+    padding: 15px;
+  }
+
+  .weekly-info-value {
+    font-size: 1.05rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .weekly-info-heading {
+    font-size: 1rem;
+  }
+
+  .weekly-teacher-card {
+    padding: 11px 8px;
+    font-size: 0.82rem;
+  }
+}
 </style>
 </head>
 <body>
@@ -387,6 +504,42 @@ footer{padding:15px 3px 3px;display:flex;justify-content:space-between;gap:12px;
   </div>
   <div class="quote"><strong>✦ MUTIARA ISLAM</strong><p>“Dan katakanlah: Tuhanku, tambahkanlah aku ilmu pengetahuan.”</p><small>(Surah Taha, 20:114)</small></div>
 </div></section>
+  
+<!-- ===== INFO MINGGUAN INTEK ===== -->
+<section id="weeklyInfoSection" class="weekly-info-section"
+         aria-label="Info Mingguan INTEK" style="display:none;">
+
+  <h2 class="weekly-info-heading">INFO MINGGUAN INTEK</h2>
+
+  <div class="weekly-info-cards">
+
+    <div class="weekly-info-card">
+      <div class="weekly-info-label">MINGGU PERSEKOLAHAN</div>
+      <div id="weeklyWeekNo" class="weekly-info-value">-</div>
+      <div id="weeklyDateRange" class="weekly-info-description">-</div>
+    </div>
+
+    <div class="weekly-info-card">
+      <div class="weekly-info-label">TEMA MINGGUAN</div>
+      <div id="weeklyTheme" class="weekly-info-value">-</div>
+      <div id="weeklyThemeDescription"
+           class="weekly-info-description">-</div>
+    </div>
+
+  </div>
+
+  <h3 class="weekly-teachers-heading">GURU BERTUGAS MINGGUAN</h3>
+
+  <div id="weeklyTeachersGrid" class="weekly-teachers-grid">
+    <div class="weekly-teacher-card">-</div>
+    <div class="weekly-teacher-card">-</div>
+    <div class="weekly-teacher-card">-</div>
+    <div class="weekly-teacher-card">-</div>
+  </div>
+
+</section>
+<!-- ===== TAMAT INFO MINGGUAN ===== -->
+
   <div class="ticker" aria-label="Maklumat bergerak"><div class="ticker-icon">📢</div><div class="ticker-window"><div class="ticker-text" id="portalTickerText"><span>SELAMAT DATANG KE INTEK SMART PORTAL 2027　 •　 #WE ARE THE BEST　 •　 HARI TERBUKA INTEK (HATI) 2027　 •　 SEMAKAN TARIKH PEPERIKSAAN AKAN DIKEMAS KINI DARI SEMASA KE SEMASA　 •　</span><span aria-hidden="true">SELAMAT DATANG KE INTEK SMART PORTAL 2027　 •　 #WE ARE THE BEST　 •　 HARI TERBUKA INTEK (HATI) 2027　 •　 SEMAKAN TARIKH PEPERIKSAAN AKAN DIKEMAS KINI DARI SEMASA KE SEMASA　 •　</span></div></div></div>
   <section id="quick"><div class="section-head"><div><div class="tag">SATU PINTU · PELBAGAI URUSAN</div><h3>Akses Pantas</h3><p>Pilih kategori untuk mendapatkan pautan dan sistem rasmi INTEK.</p></div><button class="pill" id="allLinks">Lihat semua ↗</button></div>
     <div class="quick-grid">
