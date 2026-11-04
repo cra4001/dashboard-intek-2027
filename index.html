@@ -856,10 +856,46 @@ if(!activeItems.some(item => item.type === 'settings')){
     nav.appendChild(button);
   });
 }
+  
+function renderWeeklyInfo(info) {
+  const section = document.getElementById('weeklyInfoSection');
+  if (!section) return;
+
+  if (!info) {
+    section.style.display = 'none';
+    return;
+  }
+
+  document.getElementById('weeklyWeekNo').textContent =
+    'MINGGU ' + String(info.weekNo).padStart(2, '0');
+
+  document.getElementById('weeklyDateRange').textContent =
+    info.startDate + ' hingga ' + info.endDate;
+
+  document.getElementById('weeklyTheme').textContent =
+    info.weeklyTheme || '-';
+
+  document.getElementById('weeklyThemeDescription').textContent =
+    info.themeDescription || '';
+
+  const teachersGrid = document.getElementById('weeklyTeachersGrid');
+  teachersGrid.replaceChildren();
+
+  (Array.isArray(info.teachers) ? info.teachers : []).forEach(function(name) {
+    const card = document.createElement('div');
+    card.className = 'weekly-teacher-card';
+    card.textContent = name || '-';
+    teachersGrid.appendChild(card);
+  });
+
+  section.style.display = 'block';
+}
+
   function applyPortalContent(payload){
   if(!payload || payload.ok !== true || !payload.data) return;
   const data=payload.data;
   renderPortalStatsAndEnrolment(data);
+    renderWeeklyInfo(data.weeklyInfo);
     if(Array.isArray(data.menuLinks)) renderPortalMenu(data.menuLinks);
   if(typeof data.tickerText === 'string' && data.tickerText.trim()){
     const ticker=$('#portalTickerText');
