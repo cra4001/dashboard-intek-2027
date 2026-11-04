@@ -650,7 +650,7 @@ const modal=$('#classModal');function showClass(c){$('#classDetail').innerHTML=`
 const picker=$('#classPicker');enrolment.forEach(e=>e.classes.forEach(c=>{const b=document.createElement('button');b.textContent=c[0];b.addEventListener('click',()=>showClass(c));picker.appendChild(b)}));$('#openClasses').addEventListener('click',()=>modal.classList.add('open'));$('#closeModal').addEventListener('click',()=>modal.classList.remove('open'));modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open')});
 // INTEK Smart Portal — kandungan ticker dan pengumuman daripada Public API.
 // Gunakan URL deployment API yang sama seperti integrasi waktu solat; tambah api=1.
-const PORTAL_CONTENT_API_URL = 'https://script.google.com/a/macros/moe-dl.edu.my/s/AKfycbzjKCUfreFdBAPn4497B0NM-RfB9IeNkJtoKbBZmmIFsLScu956OGWGQWJqu7YrZalO/exec';
+const PORTAL_CONTENT_API_URL = 'https://script.google.com/a/macros/moe-dl.edu.my/s/AKfycbz6AiElviuKeWMnrx9_XwIKBjjus1KtdZd3bXqOfDdTlioo0Zzs8Flrahz_SSUaFSaE/exec';
 let portalAnnouncements = [];
 function portalDateParts(value){
   const m = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
