@@ -859,7 +859,7 @@ function setSlide(i){
 }
 function startSlideTimer(){
   if(slideTimer)clearInterval(slideTimer);
-  slideTimer=setInterval(()=>{const slides=currentSlides();if(slides.length>1)setSlide((slideIndex+1)%slides.length);},5000);
+  slideTimer=setInterval(()=>{const slides=currentSlides();if(slides.length>1)setSlide((slideIndex+1)%slides.length);},45000);
 }
 function bindSlideDots(){
   currentDots().forEach((d,i)=>d.addEventListener('click',()=>setSlide(i)));
