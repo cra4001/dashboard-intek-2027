@@ -645,10 +645,69 @@ function renderPortalStatsAndEnrolment(data){
   }
 }
 
-function applyPortalContent(payload){
+function openPortalSettings(){
+  const panel = $('#visitorStatsPanel');
+
+  if(panel){
+    panel.scrollIntoView({
+      behavior:'smooth',
+      block:'nearest'
+    });
+    panel.setAttribute('tabindex','-1');
+    panel.focus({preventScroll:true});
+  }
+
+  toast('Statistik pelawat dipaparkan di bawah menu Tetapan. Kawalan tema LIGHT / DARK dan saiz tulisan A− / A / A+ berada di bahagian atas.');
+}
+
+function renderPortalMenu(items){
+  const nav = document.querySelector('.nav');
+  if(!nav || !Array.isArray(items)) return;
+
+  const activeItems = items
+    .filter(item => item && item.active !== false)
+    .sort((a,b) => (Number(a.order) || 0) - (Number(b.order) || 0));
+
+  if(!activeItems.length) return;
+
+if(!activeItems.some(item => item.type === 'settings')){
+  activeItems.push({
+    type:'settings',
+    label:'Tetapan',
+    icon:'⚙',
+    active:true
+  });
+}
+
+  nav.replaceChildren();
+
+  activeItems.forEach((item,index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.dataset.menuType = String(item.type || 'section');
+    button.dataset.menuTarget = String(item.target || '');
+    button.dataset.menuUrl = String(item.url || '');
+    button.dataset.menuLabel = String(item.label || 'Menu');
+
+    const icon = document.createElement('span');
+    icon.className = 'ico';
+    icon.textContent = String(item.icon || '↗');
+
+    const label = document.createElement('span');
+    label.textContent = String(item.label || 'Menu');
+
+    button.append(icon,label);
+
+    if(index === 0) button.classList.add('active');
+
+    nav.appendChild(button);
+  });
+}
+  function applyPortalContent(payload){
   if(!payload || payload.ok !== true || !payload.data) return;
   const data=payload.data;
   renderPortalStatsAndEnrolment(data);
+    if(Array.isArray(data.menuLinks)) renderPortalMenu(data.menuLinks);
   if(typeof data.tickerText === 'string' && data.tickerText.trim()){
     const ticker=$('#portalTickerText');
     if(ticker){
@@ -676,7 +735,7 @@ function loadPortalContent(){
 }
 
 // Theme and accessible font controls.
-$('#lightBtn').addEventListener('click',()=>{document.body.classList.remove('dark');$('#lightBtn').setAttribute('aria-pressed','true');$('#darkBtn').setAttribute('aria-pressed','false')});$('#darkBtn').addEventListener('click',()=>{document.body.classList.add('dark');$('#darkBtn').setAttribute('aria-pressed','true');$('#lightBtn').setAttribute('aria-pressed','false')});let scale=1;function setScale(){document.documentElement.style.setProperty('--scale',scale)}$('#fontDown').addEventListener('click',()=>{scale=Math.max(.85,+(scale-.05).toFixed(2));setScale()});$('#fontUp').addEventListener('click',()=>{scale=Math.min(1.2,+(scale+.05).toFixed(2));setScale()});$('#fontReset').addEventListener('click',()=>{scale=1;setScale()});$('#settingsBtn').addEventListener('click',()=>{const panel=$('#visitorStatsPanel');if(panel){panel.scrollIntoView({behavior:'smooth',block:'nearest'});panel.setAttribute('tabindex','-1');panel.focus({preventScroll:true});}toast('Statistik pelawat dipaparkan di bawah menu Tetapan. Kawalan tema dan saiz tulisan berada di bahagian atas.');});
+$('#lightBtn').addEventListener('click',()=>{document.body.classList.remove('dark');$('#lightBtn').setAttribute('aria-pressed','true');$('#darkBtn').setAttribute('aria-pressed','false')});$('#darkBtn').addEventListener('click',()=>{document.body.classList.add('dark');$('#darkBtn').setAttribute('aria-pressed','true');$('#lightBtn').setAttribute('aria-pressed','false')});let scale=1;function setScale(){document.documentElement.style.setProperty('--scale',scale)}$('#fontDown').addEventListener('click',()=>{scale=Math.max(.85,+(scale-.05).toFixed(2));setScale()});$('#fontUp').addEventListener('click',()=>{scale=Math.min(1.2,+(scale+.05).toFixed(2));setScale()});$('#fontReset').addEventListener('click',()=>{scale=1;setScale()});
 // Search filters announcements, events and quick links in place.
 $('#search').addEventListener('input',e=>{const q=e.target.value.trim().toLocaleLowerCase('ms');let count=0;$$('.searchable').forEach(el=>{const show=el.textContent.toLocaleLowerCase('ms').includes(q);el.style.display=show?'':'none';if(show&&q)count++});$$('.quick').forEach(el=>{const show=el.textContent.toLocaleLowerCase('ms').includes(q);el.style.display=(!q||show)?'':'none';if(show&&q)count++});$$('.searchable-panel').forEach(panel=>panel.style.opacity=q&&!panel.textContent.toLocaleLowerCase('ms').includes(q)?'.65':'1');if(q&&count===0)toast('Tiada padanan ditemui. Cuba kata kunci lain.')});
 // Pautan rasmi yang telah disahkan oleh pihak INTEK. Pautan yang belum diberi tidak direka.
@@ -728,18 +787,64 @@ $$('[data-scroll]').forEach(b=>b.addEventListener('click',()=>{
   if(targetId==='events'){$('#intekCalendar')?.scrollIntoView({behavior:'smooth',block:'start'});return;}
   document.getElementById(targetId)?.scrollIntoView({behavior:'smooth',block:'start'});
 }));
-$$('.nav button[data-section]').forEach(b=>b.addEventListener('click',()=>{
-  $$('.nav button').forEach(n=>n.classList.remove('active'));b.classList.add('active');
-  const label=b.textContent.trim();
-  const navTargets={'Utama':'home','Pengurusan & Pentadbiran':'quick','Kurikulum':'quick','Hal Ehwal Murid':'enrolment','Kokurikulum':'events','PIBG':'quick','Alumni':'quick','KGSIN':'quick','Pautan Penting':'quick','Galeri INTEK':'slider'};
-  if(label==='Alumni INTEK'&&OFFICIAL_LINKS['Alumni INTEK']){window.open(OFFICIAL_LINKS['Alumni INTEK'],'_blank','noopener,noreferrer');return;}
-  const targetId=navTargets[label]||b.dataset.section;
-  if(label==='Alumni'&&OFFICIAL_LINKS['Alumni INTEK']){window.open(OFFICIAL_LINKS['Alumni INTEK'],'_blank','noopener,noreferrer');return;}
-  if(label==='Kokurikulum'){$('#intekCalendar')?.scrollIntoView({behavior:'smooth',block:'start'});return;}
-  const target=document.getElementById(targetId);
-  if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
-  else toast('Bahagian '+label+' belum mempunyai paparan khusus.');
-}));
+// Delegated click handler untuk Sidebar dinamik dan menu fallback.
+document.querySelector('.nav')?.addEventListener('click',e=>{
+  const button = e.target.closest('button');
+  if(!button) return;
+
+  $$('.nav button').forEach(item=>item.classList.remove('active'));
+  button.classList.add('active');
+
+  // Sokong menu lama jika API belum memulangkan menuLinks.
+  const type = button.dataset.menuType ||
+    (button.id === 'settingsBtn' ? 'settings' : 'section');
+
+  const label = button.dataset.menuLabel ||
+    button.textContent.trim();
+
+  if(type === 'settings'){
+    openPortalSettings();
+    return;
+  }
+
+  if(type === 'url'){
+    const url = button.dataset.menuUrl || '';
+
+    try{
+      const parsed = new URL(url);
+      if(parsed.protocol !== 'https:'){
+        throw new Error('URL tidak selamat');
+      }
+      window.open(parsed.href,'_blank','noopener,noreferrer');
+    }catch(error){
+      toast('Pautan '+label+' belum sah atau belum tersedia.');
+    }
+    return;
+  }
+
+  if(type === 'section'){
+    let targetId = button.dataset.menuTarget ||
+      button.dataset.section || '';
+
+    if(targetId === 'events'){
+      targetId = 'intekCalendar';
+    }
+
+    const target = document.getElementById(targetId);
+
+    if(target){
+      target.scrollIntoView({
+        behavior:'smooth',
+        block:'start'
+      });
+    }else{
+      toast('Bahagian '+label+' belum mempunyai paparan khusus.');
+    }
+    return;
+  }
+
+  toast('Jenis tindakan menu tidak disokong.');
+});
 // Slider: support data from Admin Panel while retaining static fallback if API fails.
 let slideIndex=0;
 let slideTimer=null;
