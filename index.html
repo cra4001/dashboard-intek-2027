@@ -984,11 +984,22 @@ const weeklySlots = [
 let weeklyInfoItems = [null,null,null];
 let weeklyInfoIndex = 1;
 
+function formatWeeklyDateDMY(value){
+  const raw=String(value||'').trim();
+  if(!raw) return '';
+  // API menghantar tarikh dalam format ISO yyyy-MM-dd.
+  const iso=raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(iso) return iso[3]+'-'+iso[2]+'-'+iso[1];
+  // Sokong juga nilai dd/MM/yyyy jika rekod lama menggunakannya.
+  const slash=raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(slash) return slash[1].padStart(2,'0')+'-'+slash[2].padStart(2,'0')+'-'+slash[3];
+  return raw;
+}
 function safeWeeklyDateRange(info){
   if(!info) return '';
   const start=String(info.startDate||'').trim();
   const end=String(info.endDate||'').trim();
-  if(start && end) return start+' hingga '+end;
+  if(start && end) return formatWeeklyDateDMY(start)+' hingga '+formatWeeklyDateDMY(end);
   return String(info.dateRange||info.weeklyDateRange||'').trim();
 }
 function createWeeklyTeacherCard(name){
