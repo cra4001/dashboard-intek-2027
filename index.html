@@ -4,6 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#082d63">
 <meta name="description" content="INTEK Smart Portal 2027 — pusat maklumat dan pautan Sekolah Berasrama Penuh Integrasi Kuantan.">
 <title>INTEK Smart Portal 2027</title>
+<meta name="portal-build" content="Final Stage draft 05-Nov-2026">
 <style>
 :root{--navy:#082d63;--navy2:#041b3e;--blue:#0878e8;--gold:#f7c644;--gold2:#ffe9a2;--bg:#f1f6fd;--surface:#fff;--ink:#102e5e;--muted:#637795;--line:#d8e5f5;--shadow:0 8px 24px #123e7110;--radius:18px;--scale:1}
 *{box-sizing:border-box}html{font-size:calc(16px * var(--scale));scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-weight:650;transition:background .2s,color .2s}body.dark{--bg:#07162a;--surface:#102541;--ink:#edf5ff;--muted:#b4c6df;--line:#2a4365;--shadow:0 8px 24px #0003;--navy:#0b2b54}button,input,a{font:inherit}button{cursor:pointer;font-weight:800}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f7c644;outline-offset:2px}.shell{min-height:100vh;display:grid;grid-template-columns:236px minmax(0,1fr)}
@@ -449,6 +450,93 @@ footer{padding:15px 3px 3px;display:flex;justify-content:space-between;gap:12px;
     font-size: 0.82rem;
   }
 }
+
+/* ===== FINAL STAGE: Hero photo overlay + weekly slider + prayer/quote states ===== */
+.hero-copy{
+  background-image:
+    linear-gradient(90deg,rgba(255,255,255,.94) 0%,rgba(255,255,255,.88) 34%,rgba(255,255,255,.76) 65%,rgba(255,250,240,.92) 100%),
+    url('assets/intek-teachers-bg.jpg') !important;
+  background-size:cover,cover;
+  background-position:center,58% 43%;
+  background-repeat:no-repeat;
+}
+body.dark .hero-copy{
+  background-image:
+    linear-gradient(90deg,rgba(7,22,42,.94) 0%,rgba(7,22,42,.88) 38%,rgba(7,22,42,.76) 70%,rgba(12,30,53,.90) 100%),
+    url('assets/intek-teachers-bg.jpg') !important;
+}
+.hero-copy:after{
+  background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,250,240,.25) 75%) !important;
+}
+body.dark .hero-copy:after{background:linear-gradient(90deg,transparent,rgba(7,22,42,.3)) !important}
+
+/* Three-week information carousel */
+.weekly-info-section{margin:18px auto 20px;padding:0 16px;max-width:1400px}
+.weekly-info-heading{font-size:1.15rem;letter-spacing:1.5px;margin:0 0 13px;color:#174b83}
+.weekly-slider{position:relative;display:flex;align-items:stretch;gap:10px;max-width:100%;touch-action:pan-y}
+.weekly-slide-card{
+  flex:1;min-width:0;padding:16px 18px 14px;border:1px solid #cbdcf0;border-radius:18px;
+  background:linear-gradient(135deg,rgba(255,255,255,.97),rgba(239,246,255,.96));
+  box-shadow:0 8px 22px rgba(20,50,80,.08);overflow:hidden;
+  transition:opacity .22s ease,transform .22s ease;
+}
+.weekly-slide-topline{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.weekly-period-label{font-size:.68rem;font-weight:950;letter-spacing:1.1px;color:#a87912}
+.weekly-position{font-size:.65rem;font-weight:850;color:#6c829e}
+.weekly-info-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.weekly-info-card{padding:16px 18px;border:1px solid rgba(40,100,160,.16);border-radius:15px;background:rgba(255,255,255,.9);box-shadow:0 4px 14px rgba(20,50,80,.06);min-width:0}
+.weekly-info-label{font-size:.72rem;font-weight:850;letter-spacing:.9px;color:#55728f;margin-bottom:7px}
+.weekly-info-value{font-size:1.12rem;font-weight:900;line-height:1.35;color:#174b83;overflow-wrap:anywhere}
+.weekly-week-number{font-size:1.55rem;letter-spacing:.2px}
+.weekly-week-number.current-week-blink{animation:weeklyNumberPulse 1.25s ease-in-out infinite}
+@keyframes weeklyNumberPulse{0%,100%{opacity:1;text-shadow:0 0 0 transparent}50%{opacity:.48;text-shadow:0 0 12px rgba(23,75,131,.24)}}
+.weekly-info-description{font-size:.82rem;line-height:1.5;margin-top:6px;color:#526579}
+.weekly-teachers-heading{margin:15px 0 9px;text-align:center;font-size:.83rem;font-weight:900;letter-spacing:.9px;color:#174b83}
+.weekly-teachers-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.weekly-teacher-card{padding:11px 12px;border-radius:12px;background:#edf4fc;border:1px solid #d6e4f4;text-align:center;font-size:.82rem;font-weight:800;color:#294b6b;box-shadow:0 3px 10px rgba(20,50,80,.04)}
+.weekly-info-empty{display:none;margin-top:10px;padding:9px 12px;border-radius:10px;background:#fff7e3;border:1px solid #f2d58a;color:#795b17;text-align:center;font-size:.76rem;font-weight:800}
+.weekly-info-empty.show{display:block}
+.weekly-nav{align-self:center;flex:0 0 38px;width:38px;height:42px;border:1px solid #cbdcf0;border-radius:13px;background:#fff;color:#174b83;font-size:1.7rem;line-height:1;box-shadow:0 4px 12px rgba(20,50,80,.08);transition:background .18s,transform .18s}
+.weekly-nav:hover:not(:disabled){background:#e8f2ff;transform:scale(1.04)}
+.weekly-nav:disabled{opacity:.32;cursor:not-allowed}
+.weekly-dots{display:flex;justify-content:center;gap:9px;margin-top:11px}
+.weekly-dots button{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:#b8c9dc;cursor:pointer;transition:all .2s}
+.weekly-dots button.active{width:25px;border-radius:8px;background:#174b83}
+body.dark .weekly-slide-card{background:linear-gradient(135deg,#102541,#142f50);border-color:#2a4365}
+body.dark .weekly-info-card{background:#0d2038;border-color:#2a4365}
+body.dark .weekly-info-heading,body.dark .weekly-info-value,body.dark .weekly-teachers-heading{color:#c9e0ff}
+body.dark .weekly-info-label,body.dark .weekly-info-description,body.dark .weekly-position{color:#b4c6df}
+body.dark .weekly-teacher-card{background:#173455;border-color:#2a4365;color:#e5f0ff}
+body.dark .weekly-info-empty{background:#493b1b;border-color:#806b34;color:#ffe8a3}
+body.dark .weekly-nav{background:#102541;border-color:#2a4365;color:#d7eaff}
+.prayertime.in-time{
+  background:rgba(30,160,95,.94)!important;color:#fff!important;border:2px solid #78e2aa!important;
+  box-shadow:0 0 0 2px rgba(32,190,112,.18),0 5px 16px rgba(0,80,45,.18)!important;
+}
+.prayertime.in-time b,.prayertime.in-time span{color:#fff!important}
+.prayertime.in-time.soon{animation:none!important}
+.quote{position:relative;overflow:hidden}
+.quote.quote-changing{animation:quoteFade .55s ease}
+@keyframes quoteFade{0%{opacity:.45;transform:translateY(3px)}100%{opacity:1;transform:translateY(0)}}
+.quote p{min-height:2.4em}
+@media(max-width:760px){
+  .weekly-info-section{padding:0 10px;margin:14px auto}
+  .weekly-slider{gap:5px}
+  .weekly-nav{flex-basis:30px;width:30px;height:38px;border-radius:10px}
+  .weekly-slide-card{padding:13px 11px}
+  .weekly-info-cards{grid-template-columns:1fr;gap:8px}
+  .weekly-info-card{padding:13px}
+  .weekly-week-number{font-size:1.35rem}
+  .weekly-teachers-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:420px){
+  .weekly-info-heading{font-size:1rem}
+  .weekly-teacher-card{padding:10px 7px;font-size:.75rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .weekly-week-number.current-week-blink,.quote.quote-changing{animation:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -502,41 +590,49 @@ footer{padding:15px 3px 3px;display:flex;justify-content:space-between;gap:12px;
     <div class="prayertime" data-prayer="maghrib" data-time=""><span>🌇</span>MAGHRIB<b>—</b></div>
     <div class="prayertime" data-prayer="isyak" data-time=""><span>🌙</span>ISYAK<b>—</b></div>
   </div>
-  <div class="quote"><strong>✦ MUTIARA ISLAM</strong><p>“Dan katakanlah: Tuhanku, tambahkanlah aku ilmu pengetahuan.”</p><small>(Surah Taha, 20:114)</small></div>
+  <div class="quote" id="islamicQuote" aria-live="polite">
+    <strong>✦ MUTIARA ISLAM</strong>
+    <p id="islamicQuoteText">“Wahai Tuhanku, tambahkanlah ilmuku.”</p>
+    <small id="islamicQuoteSource">(Surah Taha, 20:114)</small>
+  </div>
 </div></section>
   
-<!-- ===== INFO MINGGUAN INTEK ===== -->
+<!-- ===== INFO MINGGUAN INTEK: SLIDER 3 MINGGU ===== -->
 <section id="weeklyInfoSection" class="weekly-info-section"
          aria-label="Info Mingguan INTEK" style="display:none;">
-
   <h2 class="weekly-info-heading">INFO MINGGUAN INTEK</h2>
-
-  <div class="weekly-info-cards">
-
-    <div class="weekly-info-card">
-      <div class="weekly-info-label">MINGGU PERSEKOLAHAN</div>
-      <div id="weeklyWeekNo" class="weekly-info-value">-</div>
-      <div id="weeklyDateRange" class="weekly-info-description">-</div>
-    </div>
-
-    <div class="weekly-info-card">
-      <div class="weekly-info-label">TEMA MINGGUAN</div>
-      <div id="weeklyTheme" class="weekly-info-value">-</div>
-      <div id="weeklyThemeDescription"
-           class="weekly-info-description">-</div>
-    </div>
-
+  <div class="weekly-slider" id="weeklySlider" aria-roledescription="carousel" aria-label="Info minggu sebelum, semasa dan selepas">
+    <button class="weekly-nav weekly-prev" id="weeklyPrev" type="button" aria-label="Papar minggu sebelumnya">‹</button>
+    <article class="weekly-slide-card" id="weeklySlideCard" aria-live="polite">
+      <div class="weekly-slide-topline">
+        <span class="weekly-period-label" id="weeklyPeriodLabel">MINGGU SEMASA</span>
+        <span class="weekly-position" id="weeklyPosition">2 / 3</span>
+      </div>
+      <div class="weekly-info-cards">
+        <div class="weekly-info-card">
+          <div class="weekly-info-label">MINGGU PERSEKOLAHAN</div>
+          <div id="weeklyWeekNo" class="weekly-info-value weekly-week-number">-</div>
+          <div id="weeklyDateRange" class="weekly-info-description">-</div>
+        </div>
+        <div class="weekly-info-card">
+          <div class="weekly-info-label">TEMA MINGGUAN</div>
+          <div id="weeklyTheme" class="weekly-info-value">-</div>
+          <div id="weeklyThemeDescription" class="weekly-info-description">-</div>
+        </div>
+      </div>
+      <h3 class="weekly-teachers-heading">GURU BERTUGAS MINGGUAN</h3>
+      <div id="weeklyTeachersGrid" class="weekly-teachers-grid">
+        <div class="weekly-teacher-card">Maklumat belum dikemas kini</div>
+      </div>
+      <div id="weeklyInfoEmpty" class="weekly-info-empty" role="status">Maklumat belum dikemas kini</div>
+    </article>
+    <button class="weekly-nav weekly-next" id="weeklyNext" type="button" aria-label="Papar minggu seterusnya">›</button>
   </div>
-
-  <h3 class="weekly-teachers-heading">GURU BERTUGAS MINGGUAN</h3>
-
-  <div id="weeklyTeachersGrid" class="weekly-teachers-grid">
-    <div class="weekly-teacher-card">-</div>
-    <div class="weekly-teacher-card">-</div>
-    <div class="weekly-teacher-card">-</div>
-    <div class="weekly-teacher-card">-</div>
+  <div class="weekly-dots" id="weeklyDots" aria-label="Pilih minggu">
+    <button type="button" data-week-index="0" aria-label="Minggu sebelumnya"></button>
+    <button type="button" data-week-index="1" aria-label="Minggu semasa" class="active"></button>
+    <button type="button" data-week-index="2" aria-label="Minggu selepas"></button>
   </div>
-
 </section>
 <!-- ===== TAMAT INFO MINGGUAN ===== -->
 
@@ -858,45 +954,143 @@ if(!activeItems.some(item => item.type === 'settings')){
   });
 }
   
-function renderWeeklyInfo(info) {
-  const section = document.getElementById('weeklyInfoSection');
-  if (!section) return;
+const weeklySlots = [
+  {key:'previous',label:'MINGGU SEBELUM',index:0},
+  {key:'current',label:'MINGGU SEMASA',index:1},
+  {key:'next',label:'MINGGU SELEPAS',index:2}
+];
+let weeklyInfoItems = [null,null,null];
+let weeklyInfoIndex = 1;
 
-  if (!info) {
-    section.style.display = 'none';
+function safeWeeklyDateRange(info){
+  if(!info) return '';
+  const start=String(info.startDate||'').trim();
+  const end=String(info.endDate||'').trim();
+  if(start && end) return start+' hingga '+end;
+  return String(info.dateRange||info.weeklyDateRange||'').trim();
+}
+function renderWeeklySlide(index){
+  const item=weeklyInfoItems[index] || null;
+  const weekNo=$('#weeklyWeekNo');
+  const dateRange=$('#weeklyDateRange');
+  const theme=$('#weeklyTheme');
+  const description=$('#weeklyThemeDescription');
+  const teachers=$('#weeklyTeachersGrid');
+  const empty=$('#weeklyInfoEmpty');
+  const label=$('#weeklyPeriodLabel');
+  const position=$('#weeklyPosition');
+  if(!weekNo||!teachers||!empty)return;
+
+  weeklyInfoIndex=Math.max(0,Math.min(2,index));
+  const current=weeklyInfoIndex===1;
+  label.textContent=weeklySlots[weeklyInfoIndex].label;
+  position.textContent=(weeklyInfoIndex+1)+' / 3';
+
+  if(!item){
+    weekNo.textContent='MAKLUMAT TIADA';
+    weekNo.classList.remove('current-week-blink');
+    dateRange.textContent='Rekod minggu ini belum disediakan.';
+    theme.textContent='Maklumat belum dikemas kini';
+    description.textContent='';
+    teachers.replaceChildren();
+    const card=document.createElement('div');
+    card.className='weekly-teacher-card';
+    card.textContent='Maklumat belum dikemas kini';
+    teachers.appendChild(card);
+    empty.textContent='Maklumat belum dikemas kini';
+    empty.classList.add('show');
+  }else{
+    const rawWeek=item.weekNo ?? item.week ?? '';
+    weekNo.textContent=rawWeek!==''?'MINGGU '+String(rawWeek).replace(/^MINGGU\s*/i,'').padStart(2,'0'):'MINGGU —';
+    weekNo.classList.toggle('current-week-blink',current);
+    dateRange.textContent=safeWeeklyDateRange(item)||'Tarikh belum dikemas kini';
+    theme.textContent=String(item.weeklyTheme||item.theme||'Tema belum dikemas kini');
+    description.textContent=String(item.themeDescription||item.description||'');
+    teachers.replaceChildren();
+    const names=Array.isArray(item.teachers)?item.teachers.filter(Boolean):[];
+    if(names.length){
+      names.slice(0,8).forEach(name=>{
+        const card=document.createElement('div');
+        card.className='weekly-teacher-card';
+        card.textContent=String(name);
+        teachers.appendChild(card);
+      });
+    }else{
+      const card=document.createElement('div');
+      card.className='weekly-teacher-card';
+      card.textContent='Guru bertugas belum dikemas kini';
+      teachers.appendChild(card);
+    }
+    empty.classList.remove('show');
+  }
+  $('#weeklyPrev').disabled=weeklyInfoIndex===0;
+  $('#weeklyNext').disabled=weeklyInfoIndex===2;
+  $$('#weeklyDots button').forEach((dot,i)=>{
+    dot.classList.toggle('active',i===weeklyInfoIndex);
+    dot.setAttribute('aria-current',i===weeklyInfoIndex?'true':'false');
+  });
+}
+function renderWeeklyInfo(info, data={}){
+  const section=$('#weeklyInfoSection');
+  if(!section)return;
+  const current=info && typeof info==='object'?info:null;
+  const supplied=Array.isArray(data.weeklyInfoWeeks)?data.weeklyInfoWeeks:null;
+  const previous=data.weeklyInfoPrevious||data.previousWeeklyInfo||current?.previous||null;
+  const next=data.weeklyInfoNext||data.nextWeeklyInfo||current?.next||null;
+  if(supplied){
+    weeklyInfoItems=[
+      supplied[0]||null,
+      supplied[1]||current||null,
+      supplied[2]||null
+    ];
+  }else{
+    weeklyInfoItems=[previous,current,next];
+  }
+  // Paparkan komponen apabila sekurang-kurangnya ada rekod minggu semasa.
+  if(!current && !weeklyInfoItems.some(Boolean)){
+    section.style.display='none';
     return;
   }
-
-  document.getElementById('weeklyWeekNo').textContent =
-    'MINGGU ' + String(info.weekNo).padStart(2, '0');
-
-  document.getElementById('weeklyDateRange').textContent =
-    info.startDate + ' hingga ' + info.endDate;
-
-  document.getElementById('weeklyTheme').textContent =
-    info.weeklyTheme || '-';
-
-  document.getElementById('weeklyThemeDescription').textContent =
-    info.themeDescription || '';
-
-  const teachersGrid = document.getElementById('weeklyTeachersGrid');
-  teachersGrid.replaceChildren();
-
-  (Array.isArray(info.teachers) ? info.teachers : []).forEach(function(name) {
-    const card = document.createElement('div');
-    card.className = 'weekly-teacher-card';
-    card.textContent = name || '-';
-    teachersGrid.appendChild(card);
-  });
-
-  section.style.display = 'block';
+  section.style.display='block';
+  renderWeeklySlide(1);
 }
+function changeWeeklySlide(nextIndex){
+  const index=Math.max(0,Math.min(2,nextIndex));
+  if(index===weeklyInfoIndex)return;
+  const card=$('#weeklySlideCard');
+  if(card){
+    card.style.opacity='.35';
+    card.style.transform='translateY(4px)';
+    setTimeout(()=>{
+      renderWeeklySlide(index);
+      card.style.opacity='1';
+      card.style.transform='translateY(0)';
+    },120);
+  }else renderWeeklySlide(index);
+}
+$('#weeklyPrev')?.addEventListener('click',()=>changeWeeklySlide(weeklyInfoIndex-1));
+$('#weeklyNext')?.addEventListener('click',()=>changeWeeklySlide(weeklyInfoIndex+1));
+$$('#weeklyDots button').forEach(dot=>dot.addEventListener('click',()=>changeWeeklySlide(Number(dot.dataset.weekIndex))));
+(function bindWeeklySwipe(){
+  const slider=$('#weeklySlider');
+  if(!slider)return;
+  let startX=0,startY=0;
+  slider.addEventListener('touchstart',e=>{
+    const t=e.touches[0];startX=t.clientX;startY=t.clientY;
+  },{passive:true});
+  slider.addEventListener('touchend',e=>{
+    const t=e.changedTouches[0],dx=t.clientX-startX,dy=t.clientY-startY;
+    if(Math.abs(dx)>45 && Math.abs(dx)>Math.abs(dy)*1.25){
+      changeWeeklySlide(weeklyInfoIndex+(dx<0?1:-1));
+    }
+  },{passive:true});
+})();
 
   function applyPortalContent(payload){
   if(!payload || payload.ok !== true || !payload.data) return;
   const data=payload.data;
   renderPortalStatsAndEnrolment(data);
-    renderWeeklyInfo(data.weeklyInfo);
+    renderWeeklyInfo(data.weeklyInfo, data);
     if(Array.isArray(data.menuLinks)) renderPortalMenu(data.menuLinks);
   if(typeof data.tickerText === 'string' && data.tickerText.trim()){
     const ticker=$('#portalTickerText');
@@ -1169,22 +1363,51 @@ function loadPrayerTimes(){
 
 // Amaran berkelip apabila waktu solat seterusnya kurang daripada 10 minit.
 function updatePrayerWarnings(){
-  const now=nowMY(), current=now.getHours()*60+now.getMinutes()+now.getSeconds()/60;
+  const now=nowMY();
+  const current=now.getHours()*60+now.getMinutes()+now.getSeconds()/60;
   $$('.prayertime[data-time]').forEach(card=>{
-    const raw = card.dataset.time || '';
+    const raw=card.dataset.time||'';
     if(!/^\d{2}:\d{2}$/.test(raw)){
-      card.classList.remove('soon');
+      card.classList.remove('soon','in-time');
       card.removeAttribute('aria-label');
       return;
     }
     const [hh,mm]=raw.split(':').map(Number);
     const target=hh*60+mm;
     const remaining=(target-current+1440)%1440;
-    card.classList.toggle('soon',remaining>0 && remaining<10);
-    if(remaining>0 && remaining<10){card.setAttribute('aria-label',card.textContent.trim()+' — waktu hampir masuk');}
+    const elapsed=(current-target+1440)%1440;
+    const isCurrentPrayer=elapsed>=0 && elapsed<60;
+    const isSoon=remaining>0 && remaining<10;
+    card.classList.toggle('in-time',isCurrentPrayer);
+    card.classList.toggle('soon',isSoon && !isCurrentPrayer);
+    if(isCurrentPrayer) card.setAttribute('aria-label',card.textContent.trim()+' — waktu solat telah masuk');
+    else if(isSoon) card.setAttribute('aria-label',card.textContent.trim()+' — waktu hampir masuk');
     else card.removeAttribute('aria-label');
   });
 }
+
+
+// Lima Mutiara Islam: paparan bertukar setiap lima minit.
+const islamicQuotes=[
+  {text:'“Wahai Tuhanku, tambahkanlah ilmuku.”',source:'(Surah Taha, 20:114)'},
+  {text:'“Sesungguhnya Allah bersama orang-orang yang sabar.”',source:'(Maksud Surah Al-Baqarah, 2:153)'},
+  {text:'“Sesungguhnya Allah menyuruh kamu menyampaikan amanah kepada yang berhak menerimanya.”',source:'(Maksud Surah An-Nisa’, 4:58)'},
+  {text:'“Dan berbuat baiklah; sesungguhnya Allah mengasihi orang-orang yang berbuat baik.”',source:'(Maksud Surah Al-Baqarah, 2:195)'},
+  {text:'“Tidak sempurna iman seseorang sehingga dia mengasihi saudaranya sebagaimana dia mengasihi dirinya sendiri.”',source:'(Sahih al-Bukhari, 13; Sahih Muslim, 45)'}
+];
+let islamicQuoteIndex=0;
+function showIslamicQuote(index){
+  const panel=$('#islamicQuote'),text=$('#islamicQuoteText'),source=$('#islamicQuoteSource');
+  if(!panel||!text||!source)return;
+  islamicQuoteIndex=(index+islamicQuotes.length)%islamicQuotes.length;
+  panel.classList.remove('quote-changing');
+  void panel.offsetWidth;
+  text.textContent=islamicQuotes[islamicQuoteIndex].text;
+  source.textContent=islamicQuotes[islamicQuoteIndex].source;
+  panel.classList.add('quote-changing');
+}
+showIslamicQuote(0);
+setInterval(()=>showIslamicQuote(islamicQuoteIndex+1),5*60*1000);
 
 drawClock();
 updateCountdowns();
