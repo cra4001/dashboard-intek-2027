@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#082d63">
 <meta name="description" content="INTEK Smart Portal 2027 — pusat maklumat dan pautan Sekolah Berasrama Penuh Integrasi Kuantan.">
 <title>INTEK Smart Portal 2027</title>
-<meta name="portal-build" content="Final Stage draft 05-Nov-2026">
+<meta name="portal-build" content="Final Stage update 05-Nov-2026 · Weekly colours, pulse and ticker order">
 <style>
 :root{--navy:#082d63;--navy2:#041b3e;--blue:#0878e8;--gold:#f7c644;--gold2:#ffe9a2;--bg:#f1f6fd;--surface:#fff;--ink:#102e5e;--muted:#637795;--line:#d8e5f5;--shadow:0 8px 24px #123e7110;--radius:18px;--scale:1}
 *{box-sizing:border-box}html{font-size:calc(16px * var(--scale));scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-weight:650;transition:background .2s,color .2s}body.dark{--bg:#07162a;--surface:#102541;--ink:#edf5ff;--muted:#b4c6df;--line:#2a4365;--shadow:0 8px 24px #0003;--navy:#0b2b54}button,input,a{font:inherit}button{cursor:pointer;font-weight:800}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f7c644;outline-offset:2px}.shell{min-height:100vh;display:grid;grid-template-columns:236px minmax(0,1fr)}
@@ -487,9 +487,10 @@ body.dark .hero-copy:after{background:linear-gradient(90deg,transparent,rgba(7,2
 .weekly-info-card{padding:16px 18px;border:1px solid rgba(40,100,160,.16);border-radius:15px;background:rgba(255,255,255,.9);box-shadow:0 4px 14px rgba(20,50,80,.06);min-width:0}
 .weekly-info-label{font-size:.72rem;font-weight:850;letter-spacing:.9px;color:#55728f;margin-bottom:7px}
 .weekly-info-value{font-size:1.12rem;font-weight:900;line-height:1.35;color:#174b83;overflow-wrap:anywhere}
-.weekly-week-number{font-size:1.55rem;letter-spacing:.2px}
-.weekly-week-number.current-week-blink{animation:weeklyNumberPulse 1.25s ease-in-out infinite}
-@keyframes weeklyNumberPulse{0%,100%{opacity:1;text-shadow:0 0 0 transparent}50%{opacity:.48;text-shadow:0 0 12px rgba(23,75,131,.24)}}
+#weeklyTheme{color:#8b1e2d !important}
+.weekly-week-number{font-size:1.55rem;letter-spacing:.2px;color:#8b1e2d !important}
+.weekly-week-number.current-week-blink{color:#8b1e2d !important;animation:weeklyNumberPulse .95s ease-in-out infinite}
+@keyframes weeklyNumberPulse{0%,100%{opacity:1;text-shadow:0 0 0 transparent}50%{opacity:.38;text-shadow:0 0 12px rgba(139,30,45,.28)}}
 .weekly-info-description{font-size:.82rem;line-height:1.5;margin-top:6px;color:#526579}
 .weekly-teachers-heading{margin:15px 0 9px;text-align:center;font-size:.83rem;font-weight:900;letter-spacing:.9px;color:#174b83}
 .weekly-teachers-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
@@ -597,6 +598,8 @@ body.dark .weekly-nav{background:#102541;border-color:#2a4365;color:#d7eaff}
   </div>
 </div></section>
   
+<div class="ticker" aria-label="Maklumat bergerak"><div class="ticker-icon">📢</div><div class="ticker-window"><div class="ticker-text" id="portalTickerText"><span>SELAMAT DATANG KE INTEK SMART PORTAL 2027　 •　 #WE ARE THE BEST　 •　 HARI TERBUKA INTEK (HATI) 2027　 •　 SEMAKAN TARIKH PEPERIKSAAN AKAN DIKEMAS KINI DARI SEMASA KE SEMASA　 •　</span><span aria-hidden="true">SELAMAT DATANG KE INTEK SMART PORTAL 2027　 •　 #WE ARE THE BEST　 •　 HARI TERBUKA INTEK (HATI) 2027　 •　 SEMAKAN TARIKH PEPERIKSAAN AKAN DIKEMAS KINI DARI SEMASA KE SEMASA　 •　</span></div></div></div>
+
 <!-- ===== INFO MINGGUAN INTEK: SLIDER 3 MINGGU ===== -->
 <section id="weeklyInfoSection" class="weekly-info-section"
          aria-label="Info Mingguan INTEK" style="display:none;">
@@ -636,7 +639,6 @@ body.dark .weekly-nav{background:#102541;border-color:#2a4365;color:#d7eaff}
 </section>
 <!-- ===== TAMAT INFO MINGGUAN ===== -->
 
-  <div class="ticker" aria-label="Maklumat bergerak"><div class="ticker-icon">📢</div><div class="ticker-window"><div class="ticker-text" id="portalTickerText"><span>SELAMAT DATANG KE INTEK SMART PORTAL 2027　 •　 #WE ARE THE BEST　 •　 HARI TERBUKA INTEK (HATI) 2027　 •　 SEMAKAN TARIKH PEPERIKSAAN AKAN DIKEMAS KINI DARI SEMASA KE SEMASA　 •　</span><span aria-hidden="true">SELAMAT DATANG KE INTEK SMART PORTAL 2027　 •　 #WE ARE THE BEST　 •　 HARI TERBUKA INTEK (HATI) 2027　 •　 SEMAKAN TARIKH PEPERIKSAAN AKAN DIKEMAS KINI DARI SEMASA KE SEMASA　 •　</span></div></div></div>
   <section id="quick"><div class="section-head"><div><div class="tag">SATU PINTU · PELBAGAI URUSAN</div><h3>Akses Pantas</h3><p>Pilih kategori untuk mendapatkan pautan dan sistem rasmi INTEK.</p></div><button class="pill" id="allLinks">Lihat semua ↗</button></div>
     <div class="quick-grid">
       <button class="quick" data-link="DELIMa 3.0"><span class="qicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 4l9 6.5V20H3z"/><path d="M9 20v-6h6v6M7 10h.01M12 10h.01M17 10h.01"/></svg></span><strong>DELIMa 3.0</strong><small>Platform pembelajaran ↗</small></button>
