@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#082d63">
 <meta name="description" content="INTEK Smart Portal 2027 — pusat maklumat dan pautan Sekolah Berasrama Penuh Integrasi Kuantan.">
 <title>INTEK Smart Portal 2027</title>
-<meta name="portal-build" content="Final Stage update 05-Nov-2026 · Weekly colours, pulse and ticker order">
+<meta name="portal-build" content="V20.3.4 · Quick Links + Weekly Teacher Highlight">
 <style>
 :root{--navy:#082d63;--navy2:#041b3e;--blue:#0878e8;--gold:#f7c644;--gold2:#ffe9a2;--bg:#f1f6fd;--surface:#fff;--ink:#102e5e;--muted:#637795;--line:#d8e5f5;--shadow:0 8px 24px #123e7110;--radius:18px;--scale:1}
 *{box-sizing:border-box}html{font-size:calc(16px * var(--scale));scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-weight:650;transition:background .2s,color .2s}body.dark{--bg:#07162a;--surface:#102541;--ink:#edf5ff;--muted:#b4c6df;--line:#2a4365;--shadow:0 8px 24px #0003;--navy:#0b2b54}button,input,a{font:inherit}button{cursor:pointer;font-weight:800}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f7c644;outline-offset:2px}.shell{min-height:100vh;display:grid;grid-template-columns:236px minmax(0,1fr)}
@@ -494,7 +494,12 @@ body.dark .hero-copy:after{background:linear-gradient(90deg,transparent,rgba(7,2
 .weekly-info-description{font-size:.82rem;line-height:1.5;margin-top:6px;color:#526579}
 .weekly-teachers-heading{margin:15px 0 9px;text-align:center;font-size:.83rem;font-weight:900;letter-spacing:.9px;color:#174b83}
 .weekly-teachers-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
-.weekly-teacher-card{padding:11px 12px;border-radius:12px;background:#edf4fc;border:1px solid #d6e4f4;text-align:center;font-size:.82rem;font-weight:800;color:#294b6b;box-shadow:0 3px 10px rgba(20,50,80,.04)}
+.weekly-teacher-card{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 12px;border-radius:12px;background:#fff4cc;border:1px solid #f0d98e;text-align:center;font-size:.82rem;font-weight:800;color:#294b6b;box-shadow:0 3px 10px rgba(20,50,80,.04)}
+.weekly-teacher-icon{display:inline-flex;flex:0 0 18px;width:18px;height:18px;align-items:center;justify-content:center;color:#9a7415}
+.weekly-teacher-icon svg{display:block;width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.weekly-teacher-name{min-width:0}
+body.dark .weekly-teacher-card{background:#4b411f;border-color:#8b7535;color:#fff0bd}
+body.dark .weekly-teacher-icon{color:#f4d36e}
 .weekly-info-empty{display:none;margin-top:10px;padding:9px 12px;border-radius:10px;background:#fff7e3;border:1px solid #f2d58a;color:#795b17;text-align:center;font-size:.76rem;font-weight:800}
 .weekly-info-empty.show{display:block}
 .weekly-nav{align-self:center;flex:0 0 38px;width:38px;height:42px;border:1px solid #cbdcf0;border-radius:13px;background:#fff;color:#174b83;font-size:1.7rem;line-height:1;box-shadow:0 4px 12px rgba(20,50,80,.08);transition:background .18s,transform .18s}
@@ -661,14 +666,7 @@ body.dark .weekly-nav{background:#102541;border-color:#2a4365;color:#d7eaff}
 <!-- ===== TAMAT INFO MINGGUAN ===== -->
 
   <section id="quick"><div class="section-head"><div><div class="tag">SATU PINTU · PELBAGAI URUSAN</div><h3>Akses Pantas</h3><p>Pilih kategori untuk mendapatkan pautan dan sistem rasmi INTEK.</p></div><button class="pill" id="allLinks">Lihat semua ↗</button></div>
-    <div class="quick-grid">
-      <button class="quick" data-link="DELIMa 3.0"><span class="qicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 4l9 6.5V20H3z"/><path d="M9 20v-6h6v6M7 10h.01M12 10h.01M17 10h.01"/></svg></span><strong>DELIMa 3.0</strong><small>Platform pembelajaran ↗</small></button>
-      <button class="quick" data-link="Jadual Waktu"><span class="qicon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span><strong>Jadual Waktu</strong><small>Guru & kelas ↗</small></button>
-      <button class="quick" data-link="Dokumen Rasmi"><span class="qicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v5h4M9 12h7M9 16h7"/></svg></span><strong>Dokumen Rasmi</strong><small>Fail dan rujukan ↗</small></button>
-      <button class="quick" data-link="Tempahan Bilik Khas"><span class="qicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17M2 21h20M16 10h3a2 2 0 0 1 2 2v9M8 7h4M8 11h4M8 15h4M12 21v-3h2v3"/></svg></span><strong>Tempahan Bilik Khas</strong><small>Permohonan ruang ↗</small></button>
-      <button class="quick" data-link="Laporan Kerosakan"><span class="qicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m14 7 3-3 4 4-3 3M4 20l9-9M5 5l4-2 4 4-2 4-4-2z"/><path d="m14 12 6 6-2 2-6-6"/></svg></span><strong>Laporan Kerosakan</strong><small>Aduan fasiliti ↗</small></button>
-      <button class="quick" data-link="Google Calendar"><span class="qicon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M7 14h2M12 14h2M7 17h2M12 17h2"/></svg></span><strong>Kalendar INTEK</strong><small>Agenda sekolah ↗</small></button>
-    </div></section>
+    <div class="quick-grid" id="quickGrid" aria-live="polite"></div></section>
 
   <section class="calendar-panel" id="intekCalendar" aria-label="Kalendar INTEK">
     <div class="calendar-toolbar">
@@ -993,6 +991,20 @@ function safeWeeklyDateRange(info){
   if(start && end) return start+' hingga '+end;
   return String(info.dateRange||info.weeklyDateRange||'').trim();
 }
+function createWeeklyTeacherCard(name){
+  const card=document.createElement('div');
+  card.className='weekly-teacher-card';
+  const icon=document.createElement('span');
+  icon.className='weekly-teacher-icon';
+  icon.setAttribute('aria-hidden','true');
+  icon.innerHTML='<svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>';
+  const label=document.createElement('span');
+  label.className='weekly-teacher-name';
+  label.textContent=String(name||'');
+  card.append(icon,label);
+  return card;
+}
+
 function renderWeeklySlide(index){
   const item=weeklyInfoItems[index] || null;
   const weekNo=$('#weeklyWeekNo');
@@ -1017,10 +1029,7 @@ function renderWeeklySlide(index){
     theme.textContent='Maklumat belum dikemas kini';
     description.textContent='';
     teachers.replaceChildren();
-    const card=document.createElement('div');
-    card.className='weekly-teacher-card';
-    card.textContent='Maklumat belum dikemas kini';
-    teachers.appendChild(card);
+    teachers.appendChild(createWeeklyTeacherCard('Maklumat belum dikemas kini'));
     empty.textContent='Maklumat belum dikemas kini';
     empty.classList.add('show');
   }else{
@@ -1034,16 +1043,10 @@ function renderWeeklySlide(index){
     const names=Array.isArray(item.teachers)?item.teachers.filter(Boolean):[];
     if(names.length){
       names.slice(0,8).forEach(name=>{
-        const card=document.createElement('div');
-        card.className='weekly-teacher-card';
-        card.textContent=String(name);
-        teachers.appendChild(card);
+        teachers.appendChild(createWeeklyTeacherCard(name));
       });
     }else{
-      const card=document.createElement('div');
-      card.className='weekly-teacher-card';
-      card.textContent='Guru bertugas belum dikemas kini';
-      teachers.appendChild(card);
+      teachers.appendChild(createWeeklyTeacherCard('Guru bertugas belum dikemas kini'));
     }
     empty.classList.remove('show');
   }
@@ -1110,10 +1113,30 @@ $$('#weeklyDots button').forEach(dot=>dot.addEventListener('click',()=>changeWee
   },{passive:true});
 })();
 
+function escapeQuickText(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function quickIconSvg(key){
+ const icons={
+  delima:'<path d="M3 10.5 12 4l9 6.5V20H3z"/><path d="M9 20v-6h6v6M7 10h.01M12 10h.01M17 10h.01"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
+  document:'<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v5h4M9 12h7M9 16h7"/>',
+  building:'<path d="M4 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17M2 21h20M16 10h3a2 2 0 0 1 2 2v9M8 7h4M8 11h4M8 15h4M12 21v-3h2v3"/>',
+  tools:'<path d="m14 7 3-3 4 4-3 3M4 20l9-9M5 5l4-2 4 4-2 4-4-2z"/><path d="m14 12 6 6-2 2-6-6"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M7 14h2M12 14h2M7 17h2M12 17h2"/>',
+  link:'<path d="M10 13a5 5 0 0 0 7.1 0l3-3A5 5 0 0 0 13 2.9l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.1 0l-3 3A5 5 0 0 0 11 21.1l1.7-1.7"/>'
+ };
+ return '<svg viewBox="0 0 24 24" aria-hidden="true">'+(icons[key]||icons.link)+'</svg>';
+}
+function renderPortalQuickLinks(items){
+ const grid=$('#quickGrid');if(!grid||!Array.isArray(items))return;
+ const visible=items.filter(x=>x&&x.active!==false).slice(0,8);
+ grid.innerHTML=visible.map((x,i)=>'<button class="quick" type="button" data-quick-index="'+i+'" data-quick-url="'+escapeQuickText(x.url||'')+'" data-quick-action="'+(x.action==='calendar'?'calendar':'')+'" '+(!x.url&&x.action!=='calendar'?'disabled aria-disabled="true"':'')+'><span class="qicon">'+quickIconSvg(x.iconKey)+'</span><strong>'+escapeQuickText(x.label||'Akses Pantas')+'</strong><small>'+escapeQuickText(x.description||'Pautan rasmi ↗')+'</small></button>').join('');
+}
+
   function applyPortalContent(payload){
   if(!payload || payload.ok !== true || !payload.data) return;
   const data=payload.data;
   renderPortalStatsAndEnrolment(data);
+  if(Array.isArray(data.quickLinks)) renderPortalQuickLinks(data.quickLinks);
     renderWeeklyInfo(data.weeklyInfo, data);
     if(Array.isArray(data.menuLinks)) renderPortalMenu(data.menuLinks);
   if(typeof data.tickerText === 'string' && data.tickerText.trim()){
@@ -1188,6 +1211,15 @@ $$('[data-link]').forEach(el=>el.addEventListener('click',e=>{
   if(url){window.open(url,'_blank','noopener,noreferrer');return;}
   toast('Pautan '+name+' belum tersedia. Sila berikan URL rasmi.');
 }));
+$('#quickGrid')?.addEventListener('click',e=>{
+ const card=e.target.closest('.quick');if(!card)return;
+ if(card.dataset.quickAction==='calendar'){
+   setCalendarOpen(true);$('#intekCalendar')?.scrollIntoView({behavior:'smooth',block:'start'});return;
+ }
+ const url=card.dataset.quickUrl;
+ if(url)window.open(url,'_blank','noopener,noreferrer');
+ else toast('URL pautan ini belum diisi. Kemas kini melalui Admin Panel.');
+});
 $('#noticeBtn').addEventListener('click',()=>{const important=portalAnnouncements.filter(x=>x.important===true);toast(important.length?'Pengumuman penting: '+important.map(x=>x.title).join(' • '):'Tiada pengumuman penting aktif.');});
 $('#allLinks').addEventListener('click',()=>{$('#quick')?.scrollIntoView({behavior:'smooth',block:'start'});toast('Pautan rasmi yang tersedia boleh dibuka melalui kad Akses Pantas.');});
 $$('[data-scroll]').forEach(b=>b.addEventListener('click',()=>{
