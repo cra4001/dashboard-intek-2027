@@ -549,9 +549,19 @@ body.dark .weekly-nav{background:#102541;border-color:#2a4365;color:#d7eaff}
   0%,100%{opacity:1;filter:brightness(1);text-shadow:0 0 0 transparent}
   50%{opacity:.22;filter:brightness(1.18);text-shadow:0 0 12px rgba(139,30,45,.35)}
 }
+
+/* Dynamic category/submenu dialog */
+.menu-dialog-backdrop{position:fixed;inset:0;background:#03152dcc;z-index:9999;display:none;align-items:center;justify-content:center;padding:18px}
+.menu-dialog-backdrop.show{display:flex}
+.menu-dialog{width:min(620px,100%);max-height:min(82vh,760px);overflow:auto;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 24px 80px #0005}
+.menu-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.menu-dialog-head h2{margin:0;font-size:1.15rem}.menu-dialog-close{border:0;border-radius:10px;padding:8px 12px;background:var(--navy);color:#fff}
+.menu-submenu-list{display:grid;gap:8px}.menu-submenu-link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);font-weight:800}.menu-submenu-link:hover{border-color:var(--blue);background:#e8f2ff;color:#082d63}
+
 </style>
 </head>
 <body>
+<div class="menu-dialog-backdrop" id="menuDialog" role="dialog" aria-modal="true" aria-labelledby="menuDialogTitle"><div class="menu-dialog"><div class="menu-dialog-head"><h2 id="menuDialogTitle">Pautan bahagian</h2><button class="menu-dialog-close" id="menuDialogClose" type="button">Tutup ✕</button></div><div class="menu-submenu-list" id="menuSubmenuList"></div></div></div>
 <div class="shell">
 <aside class="sidebar">
   <div class="brand"><img src="assets/intek-logo.png" alt="Logo rasmi INTEK"><div><h2>INTEK</h2><p class="gold">SMART PORTAL 2027</p><p>SEKOLAH BERASRAMA PENUH INTEGRASI KUANTAN</p></div></div>
@@ -923,49 +933,50 @@ function openPortalSettings(){
   toast('Statistik pelawat dipaparkan di bawah menu Tetapan. Kawalan tema LIGHT / DARK dan saiz tulisan A− / A / A+ berada di bahagian atas.');
 }
 
+let portalMenuItems=[];
 function renderPortalMenu(items){
-  const nav = document.querySelector('.nav');
-  if(!nav || !Array.isArray(items)) return;
-
-  const activeItems = items
-    .filter(item => item && item.active !== false)
-    .sort((a,b) => (Number(a.order) || 0) - (Number(b.order) || 0));
-
-  if(!activeItems.length) return;
-
-if(!activeItems.some(item => item.type === 'settings')){
-  activeItems.push({
-    type:'settings',
-    label:'Tetapan',
-    icon:'⚙',
-    active:true
-  });
-}
-
+  const nav=document.querySelector('.nav');
+  if(!nav||!Array.isArray(items))return;
+  portalMenuItems=items.filter(item=>item&&item.active!==false)
+    .sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0));
+  if(!portalMenuItems.some(item=>item.type==='settings')){
+    portalMenuItems.push({type:'settings',label:'Tetapan',icon:'⚙',active:true});
+  }
   nav.replaceChildren();
-
-  activeItems.forEach((item,index) => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.dataset.menuType = String(item.type || 'section');
-    button.dataset.menuTarget = String(item.target || '');
-    button.dataset.menuUrl = String(item.url || '');
-    button.dataset.menuLabel = String(item.label || 'Menu');
-
-    const icon = document.createElement('span');
-    icon.className = 'ico';
-    icon.textContent = String(item.icon || '↗');
-
-    const label = document.createElement('span');
-    label.textContent = String(item.label || 'Menu');
-
-    button.append(icon,label);
-
-    if(index === 0) button.classList.add('active');
-
-    nav.appendChild(button);
+  portalMenuItems.forEach((item,index)=>{
+    const button=document.createElement('button');
+    button.type='button';
+    button.dataset.menuIndex=String(index);
+    button.dataset.menuType=String(item.type||'section');
+    button.dataset.menuTarget=String(item.target||'');
+    button.dataset.menuUrl=String(item.url||'');
+    button.dataset.menuLabel=String(item.label||'Menu');
+    const icon=document.createElement('span');icon.className='ico';icon.textContent=String(item.icon||'↗');
+    const label=document.createElement('span');label.textContent=String(item.label||'Menu');
+    button.append(icon,label);if(index===0)button.classList.add('active');nav.appendChild(button);
   });
 }
+function openMenuCategory(item){
+  const dialog=$('#menuDialog'),list=$('#menuSubmenuList'),title=$('#menuDialogTitle');
+  if(!dialog||!list)return;
+  title.textContent=item.label||'Pautan bahagian';
+  const children=(Array.isArray(item.children)?item.children:[]).filter(x=>x&&x.active!==false);
+  list.replaceChildren();
+  if(!children.length){
+    const p=document.createElement('p');p.className='empty';p.textContent='Tiada submenu aktif untuk bahagian ini.';list.appendChild(p);
+  }else children.forEach(child=>{
+    const a=document.createElement('a');a.className='menu-submenu-link';a.href=child.url||'#';a.target='_blank';a.rel='noopener noreferrer';
+    const name=document.createElement('span');name.textContent=child.label||'Pautan';
+    const arrow=document.createElement('span');arrow.textContent='↗';arrow.setAttribute('aria-hidden','true');
+    a.append(name,arrow);list.appendChild(a);
+  });
+  dialog.classList.add('show');
+}
+function closeMenuCategory(){$('#menuDialog')?.classList.remove('show')}
+$('#menuDialogClose')?.addEventListener('click',closeMenuCategory);
+$('#menuDialog')?.addEventListener('click',e=>{if(e.target.id==='menuDialog')closeMenuCategory()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenuCategory()});
+
   
 const weeklySlots = [
   {key:'previous',label:'MINGGU SEBELUM',index:0},
@@ -1184,62 +1195,29 @@ $$('[data-scroll]').forEach(b=>b.addEventListener('click',()=>{
   if(targetId==='events'){$('#intekCalendar')?.scrollIntoView({behavior:'smooth',block:'start'});return;}
   document.getElementById(targetId)?.scrollIntoView({behavior:'smooth',block:'start'});
 }));
-// Delegated click handler untuk Sidebar dinamik dan menu fallback.
+// Delegated click handler untuk menu dinamik.
 document.querySelector('.nav')?.addEventListener('click',e=>{
-  const button = e.target.closest('button');
-  if(!button) return;
-
-  $$('.nav button').forEach(item=>item.classList.remove('active'));
-  button.classList.add('active');
-
-  // Sokong menu lama jika API belum memulangkan menuLinks.
-  const type = button.dataset.menuType ||
-    (button.id === 'settingsBtn' ? 'settings' : 'section');
-
-  const label = button.dataset.menuLabel ||
-    button.textContent.trim();
-
-  if(type === 'settings'){
-    openPortalSettings();
+  const button=e.target.closest('button');if(!button)return;
+  $$('.nav button').forEach(item=>item.classList.remove('active'));button.classList.add('active');
+  const type=button.dataset.menuType||(button.id==='settingsBtn'?'settings':'section');
+  const label=button.dataset.menuLabel||button.textContent.trim();
+  const menuItem=portalMenuItems[Number(button.dataset.menuIndex)]||{};
+  if(type==='settings'){openPortalSettings();return;}
+  if(type==='category'){openMenuCategory(menuItem);return;}
+  if(type==='url'){
+    const url=button.dataset.menuUrl||'';
+    try{const parsed=new URL(url);if(parsed.protocol!=='https:')throw new Error('URL tidak selamat');window.open(parsed.href,'_blank','noopener,noreferrer');}
+    catch(error){toast('Pautan '+label+' belum sah atau belum tersedia.');}
     return;
   }
-
-  if(type === 'url'){
-    const url = button.dataset.menuUrl || '';
-
-    try{
-      const parsed = new URL(url);
-      if(parsed.protocol !== 'https:'){
-        throw new Error('URL tidak selamat');
-      }
-      window.open(parsed.href,'_blank','noopener,noreferrer');
-    }catch(error){
-      toast('Pautan '+label+' belum sah atau belum tersedia.');
-    }
+  if(type==='section'){
+    let targetId=button.dataset.menuTarget||button.dataset.section||'';
+    if(targetId==='events')targetId='intekCalendar';
+    const target=document.getElementById(targetId);
+    if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+    else toast('Bahagian '+label+' belum mempunyai paparan khusus.');
     return;
   }
-
-  if(type === 'section'){
-    let targetId = button.dataset.menuTarget ||
-      button.dataset.section || '';
-
-    if(targetId === 'events'){
-      targetId = 'intekCalendar';
-    }
-
-    const target = document.getElementById(targetId);
-
-    if(target){
-      target.scrollIntoView({
-        behavior:'smooth',
-        block:'start'
-      });
-    }else{
-      toast('Bahagian '+label+' belum mempunyai paparan khusus.');
-    }
-    return;
-  }
-
   toast('Jenis tindakan menu tidak disokong.');
 });
 // Slider: support data from Admin Panel while retaining static fallback if API fails.
