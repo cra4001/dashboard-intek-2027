@@ -47,6 +47,42 @@
 .portal-order-host>#announcementsPanel,.portal-order-host>#countdownPanel{min-width:0}
 .portal-order-host>#slider{margin-top:0}
 @media(max-width:760px){.portal-order-host{grid-template-columns:1fr;gap:12px}.portal-order-host>#quick,.portal-order-host>#slider{grid-column:1}}
+/* V1.2 — Info Mingguan dan Countdown sebaris di bawah ticker */
+.weekly-countdown-row{
+  display:grid;
+  grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);
+  gap:12px;
+  align-items:stretch;
+  margin:10px 0 14px;
+}
+.weekly-countdown-row > #weeklyInfoSection,
+.weekly-countdown-row > #countdownPanel{
+  width:100%;
+  max-width:none;
+  min-width:0;
+  margin:0;
+}
+.weekly-countdown-row > #countdownPanel{
+  align-self:stretch;
+}
+.weekly-countdown-row .weekly-info-section{
+  padding-left:8px;
+  padding-right:8px;
+}
+.weekly-countdown-row .count-panel{
+  min-width:0;
+}
+@media(max-width:900px){
+  .weekly-countdown-row{grid-template-columns:minmax(0,1fr)}
+  .weekly-countdown-row .weekly-info-section{padding-left:10px;padding-right:10px}
+}
+@media(max-width:480px){
+  .weekly-countdown-row .count-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  .weekly-countdown-row .count-card{min-height:92px;padding:8px;grid-template-columns:28px minmax(0,1fr);gap:5px}
+  .weekly-countdown-row .count-card .cicon{font-size:1.25rem}
+  .weekly-countdown-row .count-number{font-size:1.3rem!important}
+}
+
 /* V1.1 — susun atur enam baris utama selepas Info Mingguan */
 .portal-order-host{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:stretch;margin:0 0 14px}
 .portal-row{display:grid;min-width:0;gap:12px;align-items:stretch}
@@ -648,6 +684,7 @@ body.dark .weekly-nav{background:#102541;border-color:#2a4365;color:#d7eaff}
 <div class="ticker" aria-label="Maklumat bergerak"><div class="ticker-icon">📢</div><div class="ticker-window"><div class="ticker-text" id="portalTickerText"><span>SELAMAT DATANG KE INTEK SMART PORTAL 2027　 •　 #WE ARE THE BEST　 •　 HARI TERBUKA INTEK (HATI) 2027　 •　 SEMAKAN TARIKH PEPERIKSAAN AKAN DIKEMAS KINI DARI SEMASA KE SEMASA　 •　</span><span aria-hidden="true">SELAMAT DATANG KE INTEK SMART PORTAL 2027　 •　 #WE ARE THE BEST　 •　 HARI TERBUKA INTEK (HATI) 2027　 •　 SEMAKAN TARIKH PEPERIKSAAN AKAN DIKEMAS KINI DARI SEMASA KE SEMASA　 •　</span></div></div></div>
 
 <!-- ===== INFO MINGGUAN INTEK: SLIDER 3 MINGGU ===== -->
+<div id="weeklyCountdownRow" class="weekly-countdown-row" aria-label="Info Mingguan dan Countdown Acara">
 <section id="weeklyInfoSection" class="weekly-info-section"
          aria-label="Info Mingguan INTEK" style="display:none;">
   <h2 class="weekly-info-heading">INFO MINGGUAN INTEK</h2>
@@ -685,6 +722,7 @@ body.dark .weekly-nav{background:#102541;border-color:#2a4365;color:#d7eaff}
   </div>
 </section>
 <!-- ===== TAMAT INFO MINGGUAN ===== -->
+</div><!-- /weeklyCountdownRow -->
 
   <div id="portalOrderHost" class="portal-order-host" aria-label="Bahagian utama portal"></div>
   <section id="quick"><div class="section-head"><div><div class="tag">SATU PINTU · PELBAGAI URUSAN</div><h3>Akses Pantas</h3><p>Pilih kategori untuk mendapatkan pautan dan sistem rasmi INTEK.</p></div><button class="pill" id="allLinks">Lihat semua ↗</button></div>
@@ -1160,31 +1198,34 @@ function renderPortalQuickLinks(items){
     const host=document.getElementById('portalOrderHost');
     if(!host || host.dataset.layoutBuilt==='1') return;
     const get=id=>document.getElementById(id);
+    const topRow=get('weeklyCountdownRow');
+    const weekly=get('weeklyInfoSection');
     const quick=get('quick'), countdown=get('countdownPanel');
     const announcements=get('announcementsPanel'), upcoming=get('upcomingProgramsPanel');
     const stats=document.querySelector('.statsrow'), slider=get('slider');
     const calendar=get('intekCalendar'), social=document.querySelector('.social');
     const makeRow=(className,id)=>{const el=document.createElement('div');el.className=className;if(id)el.id=id;return el;};
     const row1=makeRow('portal-row portal-row-full','portalRowQuick');
-    const row2=makeRow('portal-row portal-row-full','portalRowCountdown');
     const row3=makeRow('portal-row portal-row-split','portalRowAnnouncements');
     const row4=makeRow('portal-row portal-row-split portal-row-enrolment','portalRowEnrolment');
     const row5=makeRow('portal-row portal-row-full','portalRowCalendar');
     const row6=makeRow('portal-row portal-row-full','portalRowSocial');
+    if(topRow && weekly && weekly.parentElement!==topRow) topRow.appendChild(weekly);
+    if(topRow && countdown) topRow.appendChild(countdown);
     if(quick)row1.appendChild(quick);
-    if(countdown)row2.appendChild(countdown);
     if(announcements)row3.appendChild(announcements);
     if(upcoming)row3.appendChild(upcoming);
     if(stats){stats.classList.add('enrolment-cards');row4.appendChild(stats);}
     if(slider)row4.appendChild(slider);
     if(calendar)row5.appendChild(calendar);
     if(social)row6.appendChild(social);
-    host.replaceChildren(row1,row2,row3,row4,row5,row6);
+    host.replaceChildren(row1,row3,row4,row5,row6);
     host.dataset.layoutBuilt='1';
     // Bekas grid lama tidak lagi diperlukan selepas komponennya dipindahkan.
     const oldEvents=get('events');if(oldEvents)oldEvents.remove();
     const oldLower=document.querySelector('.lower-grid');if(oldLower)oldLower.remove();
   }
+  
   function applyPortalSectionOrder(order){
     // Susunan enam baris adalah standard portal yang dipersetujui.
     // Simpan nilai tetapan sedia ada sebagai metadata untuk keserasian versi Admin.
