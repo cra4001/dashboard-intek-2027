@@ -48,33 +48,50 @@
 .portal-order-host>#slider{margin-top:0}
 @media(max-width:760px){.portal-order-host{grid-template-columns:1fr;gap:12px}.portal-order-host>#quick,.portal-order-host>#slider{grid-column:1}}
 /* V1.2 — Info Mingguan dan Countdown sebaris di bawah ticker */
+/* V1.3 — nisbah 70:30 dan tinggi seragam untuk dua panel utama */
 .weekly-countdown-row{
   display:grid;
-  grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);
+  grid-template-columns:minmax(0,7fr) minmax(0,3fr);
   gap:12px;
   align-items:stretch;
   margin:10px 0 14px;
 }
 .weekly-countdown-row > #weeklyInfoSection,
 .weekly-countdown-row > #countdownPanel{
+  box-sizing:border-box;
   width:100%;
   max-width:none;
   min-width:0;
+  min-height:100%;
+  height:100%;
   margin:0;
-}
-.weekly-countdown-row > #countdownPanel{
   align-self:stretch;
 }
-.weekly-countdown-row .weekly-info-section{
+.weekly-countdown-row > #weeklyInfoSection{
+  display:flex;
+  flex-direction:column;
   padding-left:8px;
   padding-right:8px;
 }
-.weekly-countdown-row .count-panel{
-  min-width:0;
+.weekly-countdown-row #weeklySlider{flex:1;min-height:0}
+.weekly-countdown-row #weeklySlideCard{height:100%;box-sizing:border-box}
+.weekly-countdown-row > #countdownPanel{
+  display:flex;
+  flex-direction:column;
 }
+.weekly-countdown-row > #countdownPanel .count-grid{
+  flex:1;
+  align-content:stretch;
+  grid-auto-rows:minmax(0,1fr);
+}
+.weekly-countdown-row > #countdownPanel .count-card{min-width:0}
 @media(max-width:900px){
   .weekly-countdown-row{grid-template-columns:minmax(0,1fr)}
+  .weekly-countdown-row > #weeklyInfoSection,
+  .weekly-countdown-row > #countdownPanel{height:auto;min-height:0}
   .weekly-countdown-row .weekly-info-section{padding-left:10px;padding-right:10px}
+  .weekly-countdown-row #weeklySlideCard{height:auto}
+  .weekly-countdown-row > #countdownPanel .count-grid{grid-auto-rows:auto}
 }
 @media(max-width:480px){
   .weekly-countdown-row .count-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
