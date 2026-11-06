@@ -42,6 +42,11 @@
 
 .count-note{font-size:.64rem;color:#c7dcf8;margin:10px 2px 0;line-height:1.4}
 /* lower area */.lower-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:12px;margin-top:12px}.left-lower{display:grid;gap:10px;min-width:0}.prayer{display:grid;grid-template-columns:125px repeat(5,minmax(0,1fr));gap:5px;align-items:stretch;background:linear-gradient(100deg,#082653,#0b4d91);color:white;border-radius:15px;padding:10px}.prayer-intro strong{color:#ffcf38;display:block;margin-bottom:4px;font-size:.83rem}.prayer-intro span{font-size:.66rem;line-height:1.45;display:block}.prayertime{background:#fff;color:#12305e;border-radius:9px;text-align:center;padding:8px 2px;font-size:.65rem;display:flex;flex-direction:column;justify-content:center}.prayertime b{font-size:.83rem;margin-top:3px}.prayertime span{font-size:.95rem}.quote{background:linear-gradient(115deg,#082653,#0b4d91);color:white;border-radius:15px;padding:15px;display:flex;flex-direction:column;justify-content:center;min-height:90px}.quote strong{color:#ffcf38;font-family:Georgia,serif;font-style:italic;font-size:1rem}.quote p{font-size:.78rem;line-height:1.45;margin:7px 0 0}.quote small{font-size:.66rem;color:#d8e8ff}.statsrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.stat{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:12px;display:flex;align-items:center;gap:11px;box-shadow:var(--shadow);min-width:0;min-height:92px;transition:transform .18s,box-shadow .18s}.stat:hover{transform:translateY(-3px);box-shadow:0 12px 26px #123e7118}.stat .sym{width:46px;height:46px;flex:0 0 46px;border-radius:13px;display:grid;place-items:center;font-size:1.65rem;line-height:1;background:#e5f1ff;color:#147deb}.stat:nth-child(2) .sym{background:#fff2d5;color:#d99500}.stat:nth-child(3) .sym{background:#e1f7ee;color:#15966b}.stat:nth-child(4) .sym{background:#f0e9ff;color:#7952c7}.stat:nth-child(5) .sym{background:#fce7ef;color:#d9467a}.stat:nth-child(6) .sym{background:#e0f2fe;color:#0284c7}.stat strong{font-size:1.45rem;line-height:1.1;display:block;color:var(--ink)}.stat small{font-size:.68rem;color:var(--muted);font-weight:850;letter-spacing:.4px}.social{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:13px}.social h3{font-size:.83rem;margin:0}.social p{font-size:.65rem;color:var(--muted);margin:4px 0 0}.social-icons{display:flex;gap:9px;align-items:center}.social-icons a{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#eaf3ff;box-shadow:0 3px 10px #0b4a8b18;transition:transform .18s}.social-icons a:hover{transform:translateY(-3px) scale(1.07)}.social-icons svg{width:29px;height:29px}.slider{min-height:300px;position:relative;overflow:hidden;border-radius:18px;background:#082d63;box-shadow:var(--shadow);border:1px solid var(--line)}.slide{position:absolute;inset:0;opacity:0;transition:opacity .65s}.slide.active{opacity:1}.slide img{width:100%;height:100%;object-fit:cover;display:block}.slide:after{content:"";position:absolute;inset:35% 0 0;background:linear-gradient(transparent,#041b3ed9)}.slide figcaption{position:absolute;z-index:1;left:18px;right:18px;bottom:38px;color:white;font-size:1rem;font-weight:950;text-shadow:0 2px 10px #0008}.slider-dots{position:absolute;right:15px;bottom:15px;z-index:2;display:flex;gap:6px}.slider-dots button{width:9px;height:9px;border-radius:50%;border:1px solid white;padding:0;background:#ffffff70}.slider-dots button.active{background:#f7c644;transform:scale(1.2)}.slider-label{position:absolute;z-index:2;top:14px;left:14px;background:#06295dcc;color:#fff;padding:6px 9px;border-radius:8px;font-size:.62rem;letter-spacing:1px}
+.portal-order-host{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start;margin:0 0 14px}
+.portal-order-host>#quick,.portal-order-host>#slider{grid-column:1/-1;min-width:0}
+.portal-order-host>#announcementsPanel,.portal-order-host>#countdownPanel{min-width:0}
+.portal-order-host>#slider{margin-top:0}
+@media(max-width:760px){.portal-order-host{grid-template-columns:1fr;gap:12px}.portal-order-host>#quick,.portal-order-host>#slider{grid-column:1}}
 footer{padding:15px 3px 3px;display:flex;justify-content:space-between;gap:12px;font-size:.66rem;color:var(--muted)}.toast{display:none;position:fixed;right:18px;bottom:18px;background:var(--navy);color:white;padding:12px 16px;border-radius:12px;box-shadow:var(--shadow);z-index:30;max-width:min(360px,calc(100vw - 36px));font-size:.82rem}.toast.show{display:block;animation:toastIn .2s ease-out}@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.modal-backdrop{display:none;position:fixed;inset:0;background:#06162dcc;z-index:25;align-items:center;justify-content:center;padding:18px}.modal-backdrop.open{display:flex}.modal{background:var(--surface);color:var(--ink);width:min(500px,100%);border-radius:18px;padding:21px;box-shadow:0 20px 60px #0005}.modal-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.modal h3{margin:0}.close{border:0;background:transparent;color:var(--ink);font-size:1.4rem}.class-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0}.class-stat{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:13px;text-align:center}.class-stat strong{font-size:1.5rem;display:block}.class-picker{display:flex;gap:7px;flex-wrap:wrap}.class-picker button{border:1px solid var(--line);border-radius:9px;padding:8px 11px;background:var(--surface);color:var(--ink)}.class-picker button:hover{background:var(--gold);color:#102b60}
 @media(max-width:1400px){.shell{grid-template-columns:220px minmax(0,1fr)}.dashboard-grid{grid-template-columns:1fr 1fr}.count-panel{grid-column:span 2}.count-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.count-card{min-height:96px}.quick-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.lower-grid{grid-template-columns:1fr 1fr}.slider{min-height:280px}}
 @media(max-width:1050px){.shell{grid-template-columns:190px minmax(0,1fr)}main{padding:12px}.hero{grid-template-columns:1fr;min-height:0}.hero-copy{padding:24px 25px;background:linear-gradient(112deg,#fff 0%,#fff 78%,#fffaf0 100%)}.hero-copy h2{font-size:clamp(2.1rem,5vw,3.1rem)}.hero-visual{min-height:280px;clip-path:none;margin-left:0}.dashboard-grid{grid-template-columns:1fr 1fr}.count-panel{grid-column:span 2}.count-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.lower-grid{grid-template-columns:1fr}.slider{min-height:300px}.quick-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
@@ -665,6 +670,7 @@ body.dark .weekly-nav{background:#102541;border-color:#2a4365;color:#d7eaff}
 </section>
 <!-- ===== TAMAT INFO MINGGUAN ===== -->
 
+  <div id="portalOrderHost" class="portal-order-host" aria-label="Bahagian utama portal"></div>
   <section id="quick"><div class="section-head"><div><div class="tag">SATU PINTU · PELBAGAI URUSAN</div><h3>Akses Pantas</h3><p>Pilih kategori untuk mendapatkan pautan dan sistem rasmi INTEK.</p></div><button class="pill" id="allLinks">Lihat semua ↗</button></div>
     <div class="quick-grid" id="quickGrid" aria-live="polite"></div></section>
 
@@ -697,7 +703,7 @@ body.dark .weekly-nav{background:#102541;border-color:#2a4365;color:#d7eaff}
       </div>
       <p class="calendar-events-note" id="calendarEventsStatus">Senarai program disegerakkan daripada Google Calendar.</p>
     </article>
-    <article class="panel count-panel"><div class="panel-head"><span class="panel-icon">⏳</span><h3>COUNTDOWN ACARA PENTING</h3></div><div class="count-grid">
+    <article class="panel count-panel" id="countdownPanel"><div class="panel-head"><span class="panel-icon">⏳</span><h3>COUNTDOWN ACARA PENTING</h3></div><div class="count-grid">
       <div class="count-card" data-date="2026-11-06T00:00:00+08:00"><div class="cicon">🎓</div><div><small>06 NOV 2026</small><strong>SPM 2026</strong><span class="count-number">—</span><div class="count-status">HARI LAGI</div></div></div>
       <div class="count-card" data-date="2026-10-26T00:00:00+08:00"><div class="cicon">📋</div><div><small>26 OKT 2026</small><strong>UASA/PDA T4</strong><span class="count-number">—</span><div class="count-status">HARI LAGI</div></div></div>
       <div class="count-card" data-date="2027-01-04T00:00:00+08:00"><div class="cicon">🏫</div><div><small>04 JAN 2027</small><strong>BUKA SESI 2027</strong><span class="count-number">—</span><div class="count-status">HARI LAGI</div></div></div>
@@ -984,22 +990,11 @@ const weeklySlots = [
 let weeklyInfoItems = [null,null,null];
 let weeklyInfoIndex = 1;
 
-function formatWeeklyDateDMY(value){
-  const raw=String(value||'').trim();
-  if(!raw) return '';
-  // API menghantar tarikh dalam format ISO yyyy-MM-dd.
-  const iso=raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if(iso) return iso[3]+'-'+iso[2]+'-'+iso[1];
-  // Sokong juga nilai dd/MM/yyyy jika rekod lama menggunakannya.
-  const slash=raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if(slash) return slash[1].padStart(2,'0')+'-'+slash[2].padStart(2,'0')+'-'+slash[3];
-  return raw;
-}
 function safeWeeklyDateRange(info){
   if(!info) return '';
   const start=String(info.startDate||'').trim();
   const end=String(info.endDate||'').trim();
-  if(start && end) return formatWeeklyDateDMY(start)+' hingga '+formatWeeklyDateDMY(end);
+  if(start && end) return start+' hingga '+end;
   return String(info.dateRange||info.weeklyDateRange||'').trim();
 }
 function createWeeklyTeacherCard(name){
@@ -1143,6 +1138,14 @@ function renderPortalQuickLinks(items){
  grid.innerHTML=visible.map((x,i)=>'<button class="quick" type="button" data-quick-index="'+i+'" data-quick-url="'+escapeQuickText(x.url||'')+'" data-quick-action="'+(x.action==='calendar'?'calendar':'')+'" '+(!x.url&&x.action!=='calendar'?'disabled aria-disabled="true"':'')+'><span class="qicon">'+quickIconSvg(x.iconKey)+'</span><strong>'+escapeQuickText(x.label||'Akses Pantas')+'</strong><small>'+escapeQuickText(x.description||'Pautan rasmi ↗')+'</small></button>').join('');
 }
 
+  function applyPortalSectionOrder(order){
+    const host=document.getElementById('portalOrderHost');if(!host)return;
+    const nodes={quick:document.getElementById('quick'),announcements:document.getElementById('announcementsPanel'),countdown:document.getElementById('countdownPanel'),slider:document.getElementById('slider')};
+    const allowed=['quick','announcements','countdown','slider'];
+    const requested=Array.isArray(order)?order:[];
+    const sequence=[...requested.filter((x,i)=>allowed.includes(x)&&requested.indexOf(x)===i),...allowed.filter(x=>!requested.includes(x))];
+    sequence.forEach(key=>{if(nodes[key])host.appendChild(nodes[key]);});
+  }
   function applyPortalContent(payload){
   if(!payload || payload.ok !== true || !payload.data) return;
   const data=payload.data;
@@ -1162,6 +1165,7 @@ function renderPortalQuickLinks(items){
   if(Array.isArray(data.countdowns)) renderPortalCountdowns(data.countdowns);
   if(Array.isArray(data.announcements)) renderPortalAnnouncements(data.announcements);
   if(Array.isArray(data.slides)) renderPortalSlides(data.slides);
+  applyPortalSectionOrder(data.sectionOrder);
 }
 function loadPortalContent(){
   const callback='__intekPortalCallback_'+Date.now()+'_'+Math.floor(Math.random()*100000);
