@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#082d63">
 <meta name="description" content="INTEK Smart Portal 2027 — pusat maklumat dan pautan Sekolah Berasrama Penuh Integrasi Kuantan.">
 <title>INTEK Smart Portal 2027</title>
-<meta name="portal-build" content="V20.3.4 · Quick Links + Weekly Teacher Highlight">
+<meta name="portal-build" content="V20.3.4 · Section Layout V1.1">
 <style>
 :root{--navy:#082d63;--navy2:#041b3e;--blue:#0878e8;--gold:#f7c644;--gold2:#ffe9a2;--bg:#f1f6fd;--surface:#fff;--ink:#102e5e;--muted:#637795;--line:#d8e5f5;--shadow:0 8px 24px #123e7110;--radius:18px;--scale:1}
 *{box-sizing:border-box}html{font-size:calc(16px * var(--scale));scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-weight:650;transition:background .2s,color .2s}body.dark{--bg:#07162a;--surface:#102541;--ink:#edf5ff;--muted:#b4c6df;--line:#2a4365;--shadow:0 8px 24px #0003;--navy:#0b2b54}button,input,a{font:inherit}button{cursor:pointer;font-weight:800}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f7c644;outline-offset:2px}.shell{min-height:100vh;display:grid;grid-template-columns:236px minmax(0,1fr)}
@@ -47,6 +47,22 @@
 .portal-order-host>#announcementsPanel,.portal-order-host>#countdownPanel{min-width:0}
 .portal-order-host>#slider{margin-top:0}
 @media(max-width:760px){.portal-order-host{grid-template-columns:1fr;gap:12px}.portal-order-host>#quick,.portal-order-host>#slider{grid-column:1}}
+/* V1.1 — susun atur enam baris utama selepas Info Mingguan */
+.portal-order-host{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:stretch;margin:0 0 14px}
+.portal-row{display:grid;min-width:0;gap:12px;align-items:stretch}
+.portal-row-full{grid-template-columns:minmax(0,1fr)}
+.portal-row-split{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.portal-row-enrolment{grid-template-columns:minmax(300px,.82fr) minmax(0,1.18fr)}
+.portal-row #quick,.portal-row #countdownPanel,.portal-row #announcementsPanel,.portal-row #upcomingProgramsPanel,.portal-row #intekCalendar,.portal-row .social,.portal-row #slider{min-width:0;width:100%;margin:0}
+.portal-row #countdownPanel{grid-column:auto}
+.portal-row .enrolment-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;align-content:start;min-width:0}
+.portal-row .stat{min-width:0}
+.portal-row #slider{min-height:300px;height:100%}
+.portal-row #intekCalendar{grid-column:1/-1}
+.portal-row .social{grid-column:1/-1}
+@media(max-width:900px){.portal-row-enrolment{grid-template-columns:minmax(240px,.85fr) minmax(0,1.15fr)}.portal-row .enrolment-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.portal-row-split,.portal-row-enrolment{grid-template-columns:minmax(0,1fr)}.portal-row .enrolment-cards{grid-template-columns:repeat(3,minmax(0,1fr))}.portal-row #slider{min-height:260px}}
+@media(max-width:480px){.portal-row .enrolment-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.portal-row #slider{min-height:220px}}
 footer{padding:15px 3px 3px;display:flex;justify-content:space-between;gap:12px;font-size:.66rem;color:var(--muted)}.toast{display:none;position:fixed;right:18px;bottom:18px;background:var(--navy);color:white;padding:12px 16px;border-radius:12px;box-shadow:var(--shadow);z-index:30;max-width:min(360px,calc(100vw - 36px));font-size:.82rem}.toast.show{display:block;animation:toastIn .2s ease-out}@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.modal-backdrop{display:none;position:fixed;inset:0;background:#06162dcc;z-index:25;align-items:center;justify-content:center;padding:18px}.modal-backdrop.open{display:flex}.modal{background:var(--surface);color:var(--ink);width:min(500px,100%);border-radius:18px;padding:21px;box-shadow:0 20px 60px #0005}.modal-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.modal h3{margin:0}.close{border:0;background:transparent;color:var(--ink);font-size:1.4rem}.class-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0}.class-stat{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:13px;text-align:center}.class-stat strong{font-size:1.5rem;display:block}.class-picker{display:flex;gap:7px;flex-wrap:wrap}.class-picker button{border:1px solid var(--line);border-radius:9px;padding:8px 11px;background:var(--surface);color:var(--ink)}.class-picker button:hover{background:var(--gold);color:#102b60}
 @media(max-width:1400px){.shell{grid-template-columns:220px minmax(0,1fr)}.dashboard-grid{grid-template-columns:1fr 1fr}.count-panel{grid-column:span 2}.count-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.count-card{min-height:96px}.quick-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.lower-grid{grid-template-columns:1fr 1fr}.slider{min-height:280px}}
 @media(max-width:1050px){.shell{grid-template-columns:190px minmax(0,1fr)}main{padding:12px}.hero{grid-template-columns:1fr;min-height:0}.hero-copy{padding:24px 25px;background:linear-gradient(112deg,#fff 0%,#fff 78%,#fffaf0 100%)}.hero-copy h2{font-size:clamp(2.1rem,5vw,3.1rem)}.hero-visual{min-height:280px;clip-path:none;margin-left:0}.dashboard-grid{grid-template-columns:1fr 1fr}.count-panel{grid-column:span 2}.count-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.lower-grid{grid-template-columns:1fr}.slider{min-height:300px}.quick-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
@@ -1138,13 +1154,43 @@ function renderPortalQuickLinks(items){
  grid.innerHTML=visible.map((x,i)=>'<button class="quick" type="button" data-quick-index="'+i+'" data-quick-url="'+escapeQuickText(x.url||'')+'" data-quick-action="'+(x.action==='calendar'?'calendar':'')+'" '+(!x.url&&x.action!=='calendar'?'disabled aria-disabled="true"':'')+'><span class="qicon">'+quickIconSvg(x.iconKey)+'</span><strong>'+escapeQuickText(x.label||'Akses Pantas')+'</strong><small>'+escapeQuickText(x.description||'Pautan rasmi ↗')+'</small></button>').join('');
 }
 
+  // Susun atur utama portal mengikut enam baris yang telah ditetapkan.
+  // Semua elemen asal dipindahkan tanpa membina semula kandungan atau memutuskan ID/API.
+  function buildPortalLayout(){
+    const host=document.getElementById('portalOrderHost');
+    if(!host || host.dataset.layoutBuilt==='1') return;
+    const get=id=>document.getElementById(id);
+    const quick=get('quick'), countdown=get('countdownPanel');
+    const announcements=get('announcementsPanel'), upcoming=get('upcomingProgramsPanel');
+    const stats=document.querySelector('.statsrow'), slider=get('slider');
+    const calendar=get('intekCalendar'), social=document.querySelector('.social');
+    const makeRow=(className,id)=>{const el=document.createElement('div');el.className=className;if(id)el.id=id;return el;};
+    const row1=makeRow('portal-row portal-row-full','portalRowQuick');
+    const row2=makeRow('portal-row portal-row-full','portalRowCountdown');
+    const row3=makeRow('portal-row portal-row-split','portalRowAnnouncements');
+    const row4=makeRow('portal-row portal-row-split portal-row-enrolment','portalRowEnrolment');
+    const row5=makeRow('portal-row portal-row-full','portalRowCalendar');
+    const row6=makeRow('portal-row portal-row-full','portalRowSocial');
+    if(quick)row1.appendChild(quick);
+    if(countdown)row2.appendChild(countdown);
+    if(announcements)row3.appendChild(announcements);
+    if(upcoming)row3.appendChild(upcoming);
+    if(stats){stats.classList.add('enrolment-cards');row4.appendChild(stats);}
+    if(slider)row4.appendChild(slider);
+    if(calendar)row5.appendChild(calendar);
+    if(social)row6.appendChild(social);
+    host.replaceChildren(row1,row2,row3,row4,row5,row6);
+    host.dataset.layoutBuilt='1';
+    // Bekas grid lama tidak lagi diperlukan selepas komponennya dipindahkan.
+    const oldEvents=get('events');if(oldEvents)oldEvents.remove();
+    const oldLower=document.querySelector('.lower-grid');if(oldLower)oldLower.remove();
+  }
   function applyPortalSectionOrder(order){
-    const host=document.getElementById('portalOrderHost');if(!host)return;
-    const nodes={quick:document.getElementById('quick'),announcements:document.getElementById('announcementsPanel'),countdown:document.getElementById('countdownPanel'),slider:document.getElementById('slider')};
-    const allowed=['quick','announcements','countdown','slider'];
-    const requested=Array.isArray(order)?order:[];
-    const sequence=[...requested.filter((x,i)=>allowed.includes(x)&&requested.indexOf(x)===i),...allowed.filter(x=>!requested.includes(x))];
-    sequence.forEach(key=>{if(nodes[key])host.appendChild(nodes[key]);});
+    // Susunan enam baris adalah standard portal yang dipersetujui.
+    // Simpan nilai tetapan sedia ada sebagai metadata untuk keserasian versi Admin.
+    buildPortalLayout();
+    const host=document.getElementById('portalOrderHost');
+    if(host && Array.isArray(order)) host.dataset.savedSectionOrder=order.join(',');
   }
   function applyPortalContent(payload){
   if(!payload || payload.ok !== true || !payload.data) return;
@@ -1447,6 +1493,7 @@ function showIslamicQuote(index){
 showIslamicQuote(0);
 setInterval(()=>showIslamicQuote(islamicQuoteIndex+1),5*60*1000);
 
+buildPortalLayout();
 drawClock();
 updateCountdowns();
 loadPortalContent();
