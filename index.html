@@ -679,6 +679,13 @@ html.portal-content-pending #countdownPanel{
 }
 @media(prefers-reduced-motion:reduce){.sidebar #enrolment{transition:none}}
 
+
+/* V20.3.8 — final override for every gallery caption */
+html body #slider figcaption,
+html body .slider figcaption,
+html body main #slider .slide figcaption {
+  color: #D6A000 !important;
+}
 </style>
 </head>
 <body>
@@ -1884,4 +1891,38 @@ document.addEventListener('DOMContentLoaded',loadCalendarEvents);
 })();
 
 </script>
+
+<script>
+/* V20.3.8 — enforce dark-gold text on static and Admin Panel gallery captions */
+(function(){
+  const applyGalleryCaptionColor = function(root){
+    const scope = root && root.querySelectorAll ? root : document;
+    scope.querySelectorAll('#slider figcaption').forEach(function(caption){
+      caption.style.setProperty('color', '#D6A000', 'important');
+    });
+    if(root && root.matches && root.matches('#slider figcaption')){
+      root.style.setProperty('color', '#D6A000', 'important');
+    }
+  };
+  function startGalleryCaptionEnforcer(){
+    applyGalleryCaptionColor(document);
+    const slider = document.getElementById('slider');
+    if(!slider) return;
+    const observer = new MutationObserver(function(records){
+      records.forEach(function(record){
+        record.addedNodes.forEach(function(node){
+          if(node.nodeType === 1) applyGalleryCaptionColor(node);
+        });
+      });
+    });
+    observer.observe(slider, {childList:true, subtree:true});
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', startGalleryCaptionEnforcer, {once:true});
+  }else{
+    startGalleryCaptionEnforcer();
+  }
+})();
+</script>
+
 </body></html>
