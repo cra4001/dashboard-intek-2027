@@ -656,7 +656,7 @@ html.portal-content-pending #countdownPanel{
   visibility:hidden !important;
 }
 
-/* V20.3.5 — Sidebar drag resize, enrolment follow pointer, slider caption gold */
+/* V20.3.6 — Slider caption override and safe enrolment follow area */
 .shell{grid-template-columns:var(--intek-sidebar-width,236px) minmax(0,1fr)}
 .sidebar{position:relative;isolation:isolate}
 .sidebar-resize-handle{position:absolute;z-index:20;top:0;right:-4px;bottom:0;width:9px;cursor:col-resize;touch-action:none;background:transparent}
@@ -667,7 +667,7 @@ html.portal-content-pending #countdownPanel{
 .sidebar .side-bottom{padding-bottom:var(--intek-enrol-reserve,0px)}
 .sidebar #enrolment{position:absolute;z-index:8;left:8px;right:8px;bottom:12px;width:auto;transition:top .16s ease-out,bottom .16s ease-out,box-shadow .16s;box-shadow:0 5px 16px #00152b38}
 .sidebar #enrolment.is-following{box-shadow:0 8px 22px #00152b55}
-.slide figcaption{color:#f2c94c;text-shadow:0 2px 10px #000b,0 0 2px #000}
+.slider .slide figcaption{color:#d6a000!important;text-shadow:0 2px 10px #000b,0 0 2px #000}
 @media(max-width:1400px){.shell{grid-template-columns:var(--intek-sidebar-width,220px) minmax(0,1fr)}}
 @media(max-width:1050px){.shell{grid-template-columns:var(--intek-sidebar-width,190px) minmax(0,1fr)}}
 @media(max-width:760px){
@@ -1839,8 +1839,18 @@ document.addEventListener('DOMContentLoaded',loadCalendarEvents);
     if(pointerY===null||window.matchMedia('(max-width: 760px)').matches||resizing)return;
     const sideRect=sidebar.getBoundingClientRect();
     const cardHeight=enrol.getBoundingClientRect().height;
-    const minTop=8;
-    const maxTop=Math.max(minTop,sideRect.height-cardHeight-12);
+    const weather=sidebar.querySelector('.mini-weather');
+    // Had atas bermula selepas kotak maklumat/cuaca; jadual tidak boleh
+    // naik menindih menu, statistik pelawat atau komponen sidebar lain.
+    const minTop=weather
+      ? weather.getBoundingClientRect().bottom-sideRect.top+8
+      : 8;
+    const maxTop=sideRect.height-cardHeight-12;
+    // Jika ruang selamat tidak mencukupi, kekalkan kedudukan asal dalam aliran.
+    if(maxTop<minTop){
+      resetEnrolPosition();
+      return;
+    }
     const desired=pointerY-sideRect.top-cardHeight/2;
     const top=Math.min(maxTop,Math.max(minTop,desired));
     enrol.style.bottom='auto';
