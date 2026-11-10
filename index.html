@@ -1083,12 +1083,36 @@ const weeklySlots = [
 let weeklyInfoItems = [null,null,null];
 let weeklyInfoIndex = 1;
 
+function formatWeeklyDate(value){
+  const raw=String(value||'').trim();
+  if(!raw) return '';
+
+  // Terima YYYY-MM-DD, DD/MM/YYYY atau DD-MM-YYYY.
+  let year, month, day;
+  let match=raw.match(/^(\\d{4})-(\\d{1,2})-(\\d{1,2})$/);
+  if(match){
+    year=Number(match[1]); month=Number(match[2]); day=Number(match[3]);
+  }else{
+    match=raw.match(/^(\\d{1,2})[\\/.-](\\d{1,2})[\\/.-](\\d{4})$/);
+    if(!match) return raw;
+    day=Number(match[1]); month=Number(match[2]); year=Number(match[3]);
+  }
+
+  const date=new Date(Date.UTC(year,month-1,day));
+  if(date.getUTCFullYear()!==year || date.getUTCMonth()!==month-1 || date.getUTCDate()!==day) return raw;
+
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return String(day).padStart(2,'0')+'-'+months[month-1]+'-'+String(year);
+}
 function safeWeeklyDateRange(info){
   if(!info) return '';
   const start=String(info.startDate||'').trim();
   const end=String(info.endDate||'').trim();
-  if(start && end) return start+' hingga '+end;
-  return String(info.dateRange||info.weeklyDateRange||'').trim();
+  if(start && end) return formatWeeklyDate(start)+' hingga '+formatWeeklyDate(end);
+  const range=String(info.dateRange||info.weeklyDateRange||'').trim();
+  if(!range) return '';
+  // Formatkan kedua-dua tarikh jika dateRange dibekalkan sebagai rentetan.
+  return range.replace(/(\\d{4}-\\d{1,2}-\\d{1,2}|\\d{1,2}[\\/.-]\\d{1,2}[\\/.-]\\d{4})/g,formatWeeklyDate);
 }
 function createWeeklyTeacherCard(name){
   const card=document.createElement('div');
