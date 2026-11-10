@@ -664,10 +664,11 @@ html.portal-content-pending #countdownPanel{
 .sidebar-resize-handle:hover::after,.sidebar-resize-handle.is-dragging::after{background:#f7c644}
 .sidebar-resize-handle:focus-visible{outline:2px solid #f7c644;outline-offset:-2px}
 .sidebar.is-resizing{user-select:none;cursor:col-resize}
-.sidebar .side-bottom{padding-bottom:var(--intek-enrol-reserve,0px)}
-.sidebar #enrolment{position:absolute;z-index:8;left:8px;right:8px;bottom:12px;width:auto;transition:top .16s ease-out,bottom .16s ease-out,box-shadow .16s;box-shadow:0 5px 16px #00152b38}
+.sidebar .side-bottom{padding-bottom:0}
+.sidebar .mini-weather{position:absolute;z-index:7;left:8px;right:8px;bottom:12px}
+.sidebar #enrolment{position:absolute;z-index:8;left:8px;right:8px;bottom:calc(var(--intek-banner-reserve,80px) + 20px);width:auto;transition:top .16s ease-out,bottom .16s ease-out,box-shadow .16s;box-shadow:0 5px 16px #00152b38}
 .sidebar #enrolment.is-following{box-shadow:0 8px 22px #00152b55}
-.slider .slide figcaption{color:#d6a000!important;text-shadow:0 2px 10px #000b,0 0 2px #000}
+#slider .slide figcaption,#slider figcaption{color:#d6a000!important;text-shadow:0 2px 10px #000b,0 0 2px #000}
 @media(max-width:1400px){.shell{grid-template-columns:var(--intek-sidebar-width,220px) minmax(0,1fr)}}
 @media(max-width:1050px){.shell{grid-template-columns:var(--intek-sidebar-width,190px) minmax(0,1fr)}}
 @media(max-width:760px){
@@ -717,8 +718,9 @@ html.portal-content-pending #countdownPanel{
     <small id="visitorStatsStatus" role="status" aria-live="polite">API statistik belum disambungkan.</small>
     <small class="visitor-stats-note">Pelawat unik dianggarkan berdasarkan pelayar/peranti.</small>
   </section>
-  <div class="side-bottom"><div class="mini-weather"><strong>✦ INTEK - We Are The Best</strong>Membentuk . Generasi. Pemimpin.</div>
+  <div class="side-bottom">
     <section class="enrol" id="enrolment"><div class="enrol-head"><span>ENROLEN MURID TERKINI</span><span>↗</span></div><table><thead><tr><th>Tingkatan</th><th>Lelaki</th><th>Perempuan</th><th>Jumlah</th></tr></thead><tbody id="enrolBody"></tbody><tfoot><tr><td>JUMLAH</td><td id="totalB">290</td><td id="totalG">294</td><td id="totalAll">584</td></tr></tfoot></table><button id="openClasses">KLIK KELAS UNTUK LIHAT BILANGAN ↗</button><div style="padding:0 9px 8px;font-size:.61rem;color:#637795" id="enrolUpdated">Tarikh kemas kini: 19 Oktober 2026</div></section>
+    <div class="mini-weather"><strong>✦ INTEK - We Are The Best</strong>Membentuk . Generasi. Pemimpin.</div>
   </div>
 </aside>
 <main id="home">
@@ -1498,6 +1500,7 @@ function renderPortalSlides(items){
     img.loading=i===0?'eager':'lazy';
     img.onerror=()=>{figure.style.display='none';if(figure.classList.contains('active')){const next=currentSlides().findIndex(el=>el!==figure&&el.style.display!=='none');if(next>=0)setSlide(next)}};
     const caption=document.createElement('figcaption');
+    caption.style.setProperty('color','#d6a000','important');
     caption.textContent=String(item.caption||'');
     figure.append(img,caption);
     slider.insertBefore(figure,dots);
@@ -1831,7 +1834,7 @@ document.addEventListener('DOMContentLoaded',loadCalendarEvents);
   let pointerY=null;
   const resetEnrolPosition=()=>{
     enrol.style.top='';
-    enrol.style.bottom='12px';
+    enrol.style.bottom='';
     enrol.classList.remove('is-following');
   };
   const updateEnrolPosition=()=>{
@@ -1839,14 +1842,16 @@ document.addEventListener('DOMContentLoaded',loadCalendarEvents);
     if(pointerY===null||window.matchMedia('(max-width: 760px)').matches||resizing)return;
     const sideRect=sidebar.getBoundingClientRect();
     const cardHeight=enrol.getBoundingClientRect().height;
-    const weather=sidebar.querySelector('.mini-weather');
-    // Had atas bermula selepas kotak maklumat/cuaca; jadual tidak boleh
-    // naik menindih menu, statistik pelawat atau komponen sidebar lain.
-    const minTop=weather
-      ? weather.getBoundingClientRect().bottom-sideRect.top+8
+    const visitorPanel=sidebar.querySelector('.visitor-stats-panel');
+    const banner=sidebar.querySelector('.mini-weather');
+    // Jadual bergerak di antara bawah panel statistik dan atas banner.
+    // Banner kekal di bawah jadual dan tidak ditindih.
+    const minTop=visitorPanel
+      ? visitorPanel.getBoundingClientRect().bottom-sideRect.top+8
       : 8;
-    const maxTop=sideRect.height-cardHeight-12;
-    // Jika ruang selamat tidak mencukupi, kekalkan kedudukan asal dalam aliran.
+    const maxTop=banner
+      ? banner.getBoundingClientRect().top-sideRect.top-cardHeight-8
+      : sideRect.height-cardHeight-12;
     if(maxTop<minTop){
       resetEnrolPosition();
       return;
@@ -1869,7 +1874,9 @@ document.addEventListener('DOMContentLoaded',loadCalendarEvents);
       resetEnrolPosition();
       return;
     }
-    sidebar.style.setProperty('--intek-enrol-reserve',(enrol.offsetHeight+20)+'px');
+    const banner=sidebar.querySelector('.mini-weather');
+    const bannerHeight=banner?banner.offsetHeight:60;
+    sidebar.style.setProperty('--intek-banner-reserve',(bannerHeight+20)+'px');
   };
   if('ResizeObserver' in window){new ResizeObserver(syncEnrolReserve).observe(enrol)}
   window.addEventListener('resize',syncEnrolReserve);
