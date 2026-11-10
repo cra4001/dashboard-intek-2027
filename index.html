@@ -8,7 +8,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#082d63">
 <meta name="description" content="INTEK Smart Portal 2027 — pusat maklumat dan pautan Sekolah Berasrama Penuh Integrasi Kuantan.">
 <title>INTEK Smart Portal 2027</title>
-<meta name="portal-build" content="V20.3.4 · Section Layout V1.3">
+<meta name="portal-build" content="V20.3.5 · Sidebar Resize V1.0">
 <style>
 :root{--navy:#082d63;--navy2:#041b3e;--blue:#0878e8;--gold:#f7c644;--gold2:#ffe9a2;--bg:#f1f6fd;--surface:#fff;--ink:#102e5e;--muted:#637795;--line:#d8e5f5;--shadow:0 8px 24px #123e7110;--radius:18px;--scale:1}
 *{box-sizing:border-box}html{font-size:calc(16px * var(--scale));scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-weight:650;transition:background .2s,color .2s}body.dark{--bg:#07162a;--surface:#102541;--ink:#edf5ff;--muted:#b4c6df;--line:#2a4365;--shadow:0 8px 24px #0003;--navy:#0b2b54}button,input,a{font:inherit}button{cursor:pointer;font-weight:800}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f7c644;outline-offset:2px}.shell{min-height:100vh;display:grid;grid-template-columns:236px minmax(0,1fr)}
@@ -655,6 +655,29 @@ html.portal-content-pending .ticker,
 html.portal-content-pending #countdownPanel{
   visibility:hidden !important;
 }
+
+/* V20.3.5 — Sidebar drag resize, enrolment follow pointer, slider caption gold */
+.shell{grid-template-columns:var(--intek-sidebar-width,236px) minmax(0,1fr)}
+.sidebar{position:relative;isolation:isolate}
+.sidebar-resize-handle{position:absolute;z-index:20;top:0;right:-4px;bottom:0;width:9px;cursor:col-resize;touch-action:none;background:transparent}
+.sidebar-resize-handle::after{content:"";position:absolute;top:0;bottom:0;left:4px;width:2px;background:transparent;transition:background .15s}
+.sidebar-resize-handle:hover::after,.sidebar-resize-handle.is-dragging::after{background:#f7c644}
+.sidebar-resize-handle:focus-visible{outline:2px solid #f7c644;outline-offset:-2px}
+.sidebar.is-resizing{user-select:none;cursor:col-resize}
+.sidebar .side-bottom{padding-bottom:var(--intek-enrol-reserve,0px)}
+.sidebar #enrolment{position:absolute;z-index:8;left:8px;right:8px;bottom:12px;width:auto;transition:top .16s ease-out,bottom .16s ease-out,box-shadow .16s;box-shadow:0 5px 16px #00152b38}
+.sidebar #enrolment.is-following{box-shadow:0 8px 22px #00152b55}
+.slide figcaption{color:#f2c94c;text-shadow:0 2px 10px #000b,0 0 2px #000}
+@media(max-width:1400px){.shell{grid-template-columns:var(--intek-sidebar-width,220px) minmax(0,1fr)}}
+@media(max-width:1050px){.shell{grid-template-columns:var(--intek-sidebar-width,190px) minmax(0,1fr)}}
+@media(max-width:760px){
+  .shell{grid-template-columns:1fr}
+  .sidebar-resize-handle{display:none!important}
+  .sidebar #enrolment{position:static;left:auto;right:auto;bottom:auto;width:auto;transition:none;box-shadow:none}
+  .sidebar .side-bottom{padding-bottom:0}
+}
+@media(prefers-reduced-motion:reduce){.sidebar #enrolment{transition:none}}
+
 </style>
 </head>
 <body>
@@ -1728,6 +1751,120 @@ function loadCalendarEvents(){
   document.head.appendChild(script);
 }
 document.addEventListener('DOMContentLoaded',loadCalendarEvents);
+
+
+
+// V20.3.5 — Interaksi resize sidebar dan jadual enrolmen mengikut tetikus.
+(function initSidebarInteractions(){
+  const shell=document.querySelector('.shell');
+  const sidebar=document.querySelector('.sidebar');
+  const enrol=document.getElementById('enrolment');
+  if(!shell||!sidebar||!enrol)return;
+
+  // Pemegang resize: lebar minimum ialah lebar lalai breakpoint semasa;
+  // lebar maksimum sentiasa 25% daripada lebar halaman.
+  const handle=document.createElement('div');
+  handle.className='sidebar-resize-handle';
+  handle.setAttribute('role','separator');
+  handle.setAttribute('aria-orientation','vertical');
+  handle.setAttribute('aria-label','Tarik untuk mengubah lebar menu sisi');
+  handle.setAttribute('tabindex','0');
+  sidebar.appendChild(handle);
+
+  let resizing=false;
+  let minWidth=0;
+  let activePointer=null;
+  const getCurrentWidth=()=>{
+    const firstTrack=getComputedStyle(shell).gridTemplateColumns.split(' ')[0];
+    return parseFloat(firstTrack)||sidebar.getBoundingClientRect().width;
+  };
+  const maxWidth=()=>Math.max(minWidth,Math.floor(shell.getBoundingClientRect().width*.25));
+  const setWidth=value=>{
+    const width=Math.min(maxWidth(),Math.max(minWidth,value));
+    shell.style.setProperty('--intek-sidebar-width',width+'px');
+    handle.setAttribute('aria-valuemin',String(Math.round(minWidth)));
+    handle.setAttribute('aria-valuemax',String(Math.round(maxWidth())));
+    handle.setAttribute('aria-valuenow',String(Math.round(width)));
+  };
+  handle.addEventListener('pointerdown',event=>{
+    if(window.matchMedia('(max-width: 760px)').matches)return;
+    event.preventDefault();
+    minWidth=getCurrentWidth();
+    resizing=true;
+    activePointer=event.pointerId;
+    sidebar.classList.add('is-resizing');
+    handle.classList.add('is-dragging');
+    handle.setPointerCapture(event.pointerId);
+  });
+  handle.addEventListener('pointermove',event=>{
+    if(!resizing||event.pointerId!==activePointer)return;
+    const shellRect=shell.getBoundingClientRect();
+    setWidth(event.clientX-shellRect.left);
+  });
+  const stopResize=event=>{
+    if(!resizing||(event&&event.pointerId!==activePointer))return;
+    resizing=false;activePointer=null;
+    sidebar.classList.remove('is-resizing');
+    handle.classList.remove('is-dragging');
+  };
+  handle.addEventListener('pointerup',stopResize);
+  handle.addEventListener('pointercancel',stopResize);
+  handle.addEventListener('lostpointercapture',stopResize);
+  handle.addEventListener('keydown',event=>{
+    if(window.matchMedia('(max-width: 760px)').matches)return;
+    if(event.key!=='ArrowLeft'&&event.key!=='ArrowRight')return;
+    event.preventDefault();
+    minWidth=minWidth||getCurrentWidth();
+    setWidth(getCurrentWidth()+(event.key==='ArrowRight'?12:-12));
+  });
+  window.addEventListener('resize',()=>{
+    if(window.matchMedia('(max-width: 760px)').matches){
+      shell.style.removeProperty('--intek-sidebar-width');
+      return;
+    }
+    if(shell.style.getPropertyValue('--intek-sidebar-width'))setWidth(parseFloat(shell.style.getPropertyValue('--intek-sidebar-width')));
+  });
+
+  // Jadual enrolmen mengikuti kedudukan tetikus secara menegak dalam sidebar.
+  // Pergerakan dihadkan supaya keseluruhan kad kekal di dalam sidebar.
+  let followFrame=0;
+  let pointerY=null;
+  const resetEnrolPosition=()=>{
+    enrol.style.top='';
+    enrol.style.bottom='12px';
+    enrol.classList.remove('is-following');
+  };
+  const updateEnrolPosition=()=>{
+    followFrame=0;
+    if(pointerY===null||window.matchMedia('(max-width: 760px)').matches||resizing)return;
+    const sideRect=sidebar.getBoundingClientRect();
+    const cardHeight=enrol.getBoundingClientRect().height;
+    const minTop=8;
+    const maxTop=Math.max(minTop,sideRect.height-cardHeight-12);
+    const desired=pointerY-sideRect.top-cardHeight/2;
+    const top=Math.min(maxTop,Math.max(minTop,desired));
+    enrol.style.bottom='auto';
+    enrol.style.top=top+'px';
+    enrol.classList.add('is-following');
+  };
+  sidebar.addEventListener('pointermove',event=>{
+    if(event.pointerType==='touch'||resizing||event.target.closest('.sidebar-resize-handle'))return;
+    pointerY=event.clientY;
+    if(!followFrame)followFrame=requestAnimationFrame(updateEnrolPosition);
+  });
+  sidebar.addEventListener('pointerleave',()=>{pointerY=null;resetEnrolPosition();});
+  const syncEnrolReserve=()=>{
+    if(window.matchMedia('(max-width: 760px)').matches){
+      sidebar.style.removeProperty('--intek-enrol-reserve');
+      resetEnrolPosition();
+      return;
+    }
+    sidebar.style.setProperty('--intek-enrol-reserve',(enrol.offsetHeight+20)+'px');
+  };
+  if('ResizeObserver' in window){new ResizeObserver(syncEnrolReserve).observe(enrol)}
+  window.addEventListener('resize',syncEnrolReserve);
+  syncEnrolReserve();
+})();
 
 </script>
 </body></html>
