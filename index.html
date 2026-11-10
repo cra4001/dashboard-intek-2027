@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ms" class="portal-layout-pending">
+<html lang="ms" class="portal-layout-pending portal-content-pending">
 <head>
   <!-- INTEK Official Favicon -->
 <link rel="icon" href="./favicon.ico" sizes="any">
@@ -8,7 +8,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#082d63">
 <meta name="description" content="INTEK Smart Portal 2027 — pusat maklumat dan pautan Sekolah Berasrama Penuh Integrasi Kuantan.">
 <title>INTEK Smart Portal 2027</title>
-<meta name="portal-build" content="V20.3.4 · Section Layout V1.1">
+<meta name="portal-build" content="V20.3.4 · Section Layout V1.3">
 <style>
 :root{--navy:#082d63;--navy2:#041b3e;--blue:#0878e8;--gold:#f7c644;--gold2:#ffe9a2;--bg:#f1f6fd;--surface:#fff;--ink:#102e5e;--muted:#637795;--line:#d8e5f5;--shadow:0 8px 24px #123e7110;--radius:18px;--scale:1}
 *{box-sizing:border-box}html{font-size:calc(16px * var(--scale));scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-weight:650;transition:background .2s,color .2s}body.dark{--bg:#07162a;--surface:#102541;--ink:#edf5ff;--muted:#b4c6df;--line:#2a4365;--shadow:0 8px 24px #0003;--navy:#0b2b54}button,input,a{font:inherit}button{cursor:pointer;font-weight:800}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f7c644;outline-offset:2px}.shell{min-height:100vh;display:grid;grid-template-columns:236px minmax(0,1fr)}
@@ -645,7 +645,14 @@ body.dark .weekly-nav{background:#102541;border-color:#2a4365;color:#d7eaff}
 html.portal-layout-pending #quick,
 html.portal-layout-pending #intekCalendar,
 html.portal-layout-pending #events,
-html.portal-layout-pending .lower-grid{
+html.portal-layout-pending .lower-grid,
+html.portal-layout-pending .ticker,
+html.portal-layout-pending #countdownPanel{
+  visibility:hidden !important;
+}
+/* Kandungan ticker/countdown menunggu data sebenar daripada Admin API. */
+html.portal-content-pending .ticker,
+html.portal-content-pending #countdownPanel{
   visibility:hidden !important;
 }
 </style>
@@ -904,12 +911,16 @@ function renderPortalCountdowns(items){
   if(!grid||!Array.isArray(items)) return;
   const active=items.filter(x=>x&&x.active!==false&&String(x.title||'').trim()&&/^\d{4}-\d{2}-\d{2}$/.test(String(x.date||'')));
 
-  // Fallback keselamatan: jangan padam kad statik sedia ada jika API
-  // memulangkan senarai kosong / tiada rekod countdown yang sah.
-  if(active.length===0) return;
-
-  // Gantikan kad hanya selepas sekurang-kurangnya satu rekod sah diterima.
+  // Data API ialah sumber utama. Jangan kekalkan kad statik lama jika
+  // Admin Panel menghantar senarai kosong atau tiada rekod yang sah.
   grid.replaceChildren();
+  if(active.length===0){
+    const empty=document.createElement('p');
+    empty.className='count-note';
+    empty.textContent='Tiada countdown aktif buat masa ini.';
+    grid.appendChild(empty);
+    return;
+  }
   active.slice(0,12).forEach(item=>{
     const date=String(item.date);
     const target=new Date(date+'T00:00:00+08:00');
@@ -1268,13 +1279,20 @@ function renderPortalQuickLinks(items){
   if(Array.isArray(data.quickLinks)) renderPortalQuickLinks(data.quickLinks);
     renderWeeklyInfo(data.weeklyInfo, data);
     if(Array.isArray(data.menuLinks)) renderPortalMenu(data.menuLinks);
-  if(typeof data.tickerText === 'string' && data.tickerText.trim()){
+  {
     const ticker=$('#portalTickerText');
     if(ticker){
+      const tickerValue=typeof data.tickerText==='string' ? data.tickerText.trim() : '';
       ticker.replaceChildren();
-      const first=document.createElement('span'); first.textContent=data.tickerText;
-      const second=document.createElement('span'); second.textContent=data.tickerText; second.setAttribute('aria-hidden','true');
-      ticker.append(first,second);
+      if(tickerValue){
+        const first=document.createElement('span'); first.textContent=tickerValue;
+        const second=document.createElement('span'); second.textContent=tickerValue; second.setAttribute('aria-hidden','true');
+        ticker.append(first,second);
+      }else{
+        const placeholder=document.createElement('span');
+        placeholder.textContent='Maklumat akan dikemas kini.';
+        ticker.appendChild(placeholder);
+      }
     }
   }
   if(Array.isArray(data.countdowns)) renderPortalCountdowns(data.countdowns);
@@ -1286,12 +1304,24 @@ function loadPortalContent(){
   const callback='__intekPortalCallback_'+Date.now()+'_'+Math.floor(Math.random()*100000);
   let script=null, timer=null, finished=false;
   const cleanup=()=>{if(finished)return;finished=true;if(script)script.remove();if(timer)clearTimeout(timer);try{delete window[callback];}catch(e){window[callback]=undefined;}};
-  window[callback]=payload=>{cleanup();applyPortalContent(payload);};
+  window[callback]=payload=>{
+    cleanup();
+    applyPortalContent(payload);
+    document.documentElement.classList.remove('portal-content-pending');
+  };
   script=document.createElement('script');
   script.src=PORTAL_CONTENT_API_URL+'?api=1&callback='+encodeURIComponent(callback)+'&_='+Date.now();
   script.async=true;
-  script.onerror=()=>cleanup();
-  timer=setTimeout(cleanup,12000);
+  const finishWithoutApi=()=>{
+    cleanup();
+    const ticker=$('#portalTickerText');
+    if(ticker){ticker.replaceChildren();const msg=document.createElement('span');msg.textContent='Maklumat akan dikemas kini.';ticker.appendChild(msg);}
+    const grid=$('.count-grid');
+    if(grid){grid.replaceChildren();const msg=document.createElement('p');msg.className='count-note';msg.textContent='Data countdown belum dapat dimuatkan.';grid.appendChild(msg);}
+    document.documentElement.classList.remove('portal-content-pending');
+  };
+  script.onerror=finishWithoutApi;
+  timer=setTimeout(finishWithoutApi,12000);
   document.head.appendChild(script);
 }
 
