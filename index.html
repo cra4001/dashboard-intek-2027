@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ms">
+<html lang="ms" class="portal-layout-pending">
 <head>
   <!-- INTEK Official Favicon -->
 <link rel="icon" href="./favicon.ico" sizes="any">
@@ -641,6 +641,13 @@ body.dark .weekly-nav{background:#102541;border-color:#2a4365;color:#d7eaff}
 .menu-dialog-head h2{margin:0;font-size:1.15rem}.menu-dialog-close{border:0;border-radius:10px;padding:8px 12px;background:var(--navy);color:#fff}
 .menu-submenu-list{display:grid;gap:8px}.menu-submenu-link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);font-weight:800}.menu-submenu-link:hover{border-color:var(--blue);background:#e8f2ff;color:#082d63}
 
+/* FIX V1.2 — elak paparan susun atur asal sebelum DOM selesai disusun */
+html.portal-layout-pending #quick,
+html.portal-layout-pending #intekCalendar,
+html.portal-layout-pending #events,
+html.portal-layout-pending .lower-grid{
+  visibility:hidden !important;
+}
 </style>
 </head>
 <body>
@@ -1556,6 +1563,8 @@ showIslamicQuote(0);
 setInterval(()=>showIslamicQuote(islamicQuoteIndex+1),5*60*1000);
 
 buildPortalLayout();
+document.documentElement.classList.remove("portal-layout-pending");
+document.documentElement.classList.add("portal-layout-ready");
 drawClock();
 updateCountdowns();
 loadPortalContent();
