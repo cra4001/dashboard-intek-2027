@@ -674,8 +674,27 @@ html.portal-content-pending #countdownPanel{
 @media(max-width:760px){
   .shell{grid-template-columns:1fr}
   .sidebar-resize-handle{display:none!important}
-  .sidebar #enrolment{position:static;left:auto;right:auto;bottom:auto;width:auto;transition:none;box-shadow:none}
-  .sidebar .side-bottom{padding-bottom:0}
+  /* Paparan telefon: tunjukkan jadual enrolmen selepas statistik pelawat. */
+  .sidebar .side-bottom{
+    display:grid!important;
+    margin-top:8px!important;
+    padding-bottom:0;
+    width:100%;
+  }
+  .sidebar #enrolment{
+    display:block!important;
+    position:static;
+    left:auto;
+    right:auto;
+    top:auto!important;
+    bottom:auto!important;
+    width:100%;
+    max-width:100%;
+    transition:none;
+    box-shadow:none;
+  }
+  /* Banner desktop tidak diperlukan dalam susun atur telefon. */
+  .sidebar .mini-weather{display:none!important}
 }
 @media(prefers-reduced-motion:reduce){.sidebar #enrolment{transition:none}}
 
