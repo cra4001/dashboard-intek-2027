@@ -8,7 +8,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#082d63">
 <meta name="description" content="INTEK Smart Portal 2027 — pusat maklumat dan pautan Sekolah Berasrama Penuh Integrasi Kuantan.">
 <title>INTEK Smart Portal 2027</title>
-<meta name="portal-build" content="V20.3.5 · Sidebar Resize V1.0">
+<meta name="portal-build" content="V20.3.5 · Mutiara Kata Admin V1.0">
 <style>
 :root{--navy:#082d63;--navy2:#041b3e;--blue:#0878e8;--gold:#f7c644;--gold2:#ffe9a2;--bg:#f1f6fd;--surface:#fff;--ink:#102e5e;--muted:#637795;--line:#d8e5f5;--shadow:0 8px 24px #123e7110;--radius:18px;--scale:1}
 *{box-sizing:border-box}html{font-size:calc(16px * var(--scale));scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-weight:650;transition:background .2s,color .2s}body.dark{--bg:#07162a;--surface:#102541;--ink:#edf5ff;--muted:#b4c6df;--line:#2a4365;--shadow:0 8px 24px #0003;--navy:#0b2b54}button,input,a{font:inherit}button{cursor:pointer;font-weight:800}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f7c644;outline-offset:2px}.shell{min-height:100vh;display:grid;grid-template-columns:236px minmax(0,1fr)}
@@ -1350,6 +1350,7 @@ function renderPortalQuickLinks(items){
   function applyPortalContent(payload){
   if(!payload || payload.ok !== true || !payload.data) return;
   const data=payload.data;
+  configureIslamicQuotes(data);
   renderPortalStatsAndEnrolment(data);
   if(Array.isArray(data.quickLinks)) renderPortalQuickLinks(data.quickLinks);
     renderWeeklyInfo(data.weeklyInfo, data);
@@ -1646,27 +1647,38 @@ function updatePrayerWarnings(){
 }
 
 
-// Lima Mutiara Islam: paparan bertukar setiap lima minit.
-const islamicQuotes=[
-  {text:'“Wahai Tuhanku, tambahkanlah ilmuku.”',source:'(Surah Taha, 20:114)'},
-  {text:'“Sesungguhnya Allah bersama orang-orang yang sabar.”',source:'(Maksud Surah Al-Baqarah, 2:153)'},
-  {text:'“Sesungguhnya Allah menyuruh kamu menyampaikan amanah kepada yang berhak menerimanya.”',source:'(Maksud Surah An-Nisa’, 4:58)'},
-  {text:'“Dan berbuat baiklah; sesungguhnya Allah mengasihi orang-orang yang berbuat baik.”',source:'(Maksud Surah Al-Baqarah, 2:195)'},
-  {text:'“Tidak sempurna iman seseorang sehingga dia mengasihi saudaranya sebagaimana dia mengasihi dirinya sendiri.”',source:'(Sahih al-Bukhari, 13; Sahih Muslim, 45)'}
+// Mutiara Islam: data utama dibaca daripada Apps Script; senarai asal kekal sebagai fallback.
+const defaultIslamicQuotes=[
+  {text:'“Wahai Tuhanku, tambahkanlah ilmuku.”',source:'(Surah Taha, 20:114)',active:true},
+  {text:'“Sesungguhnya Allah bersama orang-orang yang sabar.”',source:'(Maksud Surah Al-Baqarah, 2:153)',active:true},
+  {text:'“Sesungguhnya Allah menyuruh kamu menyampaikan amanah kepada yang berhak menerimanya.”',source:'(Maksud Surah An-Nisa’, 4:58)',active:true},
+  {text:'“Dan berbuat baiklah; sesungguhnya Allah mengasihi orang-orang yang berbuat baik.”',source:'(Maksud Surah Al-Baqarah, 2:195)',active:true},
+  {text:'“Tidak sempurna iman seseorang sehingga dia mengasihi saudaranya sebagaimana dia mengasihi dirinya sendiri.”',source:'(Sahih al-Bukhari, 13; Sahih Muslim, 45)',active:true}
 ];
-let islamicQuoteIndex=0;
+let islamicQuotes=defaultIslamicQuotes.slice(),islamicQuoteIndex=0,quoteTimer=null,quoteIntervalMinutes=5;
 function showIslamicQuote(index){
   const panel=$('#islamicQuote'),text=$('#islamicQuoteText'),source=$('#islamicQuoteSource');
-  if(!panel||!text||!source)return;
+  if(!panel||!text||!source||!islamicQuotes.length)return;
   islamicQuoteIndex=(index+islamicQuotes.length)%islamicQuotes.length;
-  panel.classList.remove('quote-changing');
-  void panel.offsetWidth;
+  panel.classList.remove('quote-changing');void panel.offsetWidth;
   text.textContent=islamicQuotes[islamicQuoteIndex].text;
-  source.textContent=islamicQuotes[islamicQuoteIndex].source;
+  source.textContent=islamicQuotes[islamicQuoteIndex].source||'';
   panel.classList.add('quote-changing');
 }
+function configureIslamicQuotes(data){
+  if(Array.isArray(data.islamicQuotes)){
+    const active=data.islamicQuotes.filter(x=>x&&x.active!==false&&String(x.text||'').trim());
+    islamicQuotes=active.map(x=>({text:String(x.text),source:String(x.source||'')}));
+    const panel=$('#islamicQuote');
+    if(panel)panel.style.display=islamicQuotes.length?'':'none';
+  }
+  const minutes=Number(data.quoteIntervalMinutes);
+  quoteIntervalMinutes=Number.isInteger(minutes)&&minutes>=1&&minutes<=60?minutes:5;
+  islamicQuoteIndex=0;if(islamicQuotes.length)showIslamicQuote(0);
+  if(quoteTimer)clearInterval(quoteTimer);
+  quoteTimer=setInterval(()=>{if(islamicQuotes.length>1)showIslamicQuote(islamicQuoteIndex+1);},quoteIntervalMinutes*60*1000);
+}
 showIslamicQuote(0);
-setInterval(()=>showIslamicQuote(islamicQuoteIndex+1),5*60*1000);
 
 buildPortalLayout();
 document.documentElement.classList.remove("portal-layout-pending");
