@@ -8,7 +8,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#082d63">
 <meta name="description" content="INTEK Smart Portal 2027 — pusat maklumat dan pautan Sekolah Berasrama Penuh Integrasi Kuantan.">
 <title>INTEK Smart Portal 2027</title>
-<meta name="portal-build" content="V20.3.5 · Mutiara Kata Admin V1.0">
+<meta name="portal-build" content="V21.0 · Three Main Tabs & Application Directory">
 <style>
 :root{--navy:#082d63;--navy2:#041b3e;--blue:#0878e8;--gold:#f7c644;--gold2:#ffe9a2;--bg:#f1f6fd;--surface:#fff;--ink:#102e5e;--muted:#637795;--line:#d8e5f5;--shadow:0 8px 24px #123e7110;--radius:18px;--scale:1}
 *{box-sizing:border-box}html{font-size:calc(16px * var(--scale));scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-weight:650;transition:background .2s,color .2s}body.dark{--bg:#07162a;--surface:#102541;--ink:#edf5ff;--muted:#b4c6df;--line:#2a4365;--shadow:0 8px 24px #0003;--navy:#0b2b54}button,input,a{font:inherit}button{cursor:pointer;font-weight:800}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f7c644;outline-offset:2px}.shell{min-height:100vh;display:grid;grid-template-columns:236px minmax(0,1fr)}
@@ -705,6 +705,34 @@ html body .slider figcaption,
 html body main #slider .slide figcaption {
   color: #D6A000 !important;
 }
+
+/* V21.0 — tiga tab utama dan direktori aplikasi */
+.main-tabs{display:flex;gap:9px;margin:0 0 14px;padding:5px;border:1px solid var(--line);border-radius:15px;background:var(--surface);box-shadow:var(--shadow)}
+.main-tabs button{flex:1;min-width:0;border:1px solid transparent;border-radius:11px;padding:12px 14px;background:transparent;color:var(--ink);font-weight:950;font-size:.86rem;letter-spacing:.3px;transition:background .18s,color .18s,transform .18s}
+.main-tabs button:hover{background:#eaf3ff;color:#082d63}
+.main-tabs button.active{background:linear-gradient(110deg,#ffe58d,#f7c644);color:#082d63;box-shadow:0 4px 12px #d99b0028}
+.app-directory{display:none;min-height:55vh;padding:20px 0 30px}
+.app-directory.active{display:block}
+.app-directory-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin:4px 0 18px;flex-wrap:wrap}
+.app-directory-head h2{margin:0;color:var(--ink);font-size:clamp(1.25rem,2vw,1.8rem);font-weight:1000}
+.app-directory-head p{margin:5px 0 0;color:var(--muted);font-size:.8rem}
+.app-directory-tools{display:flex;gap:8px;flex-wrap:wrap}
+.app-directory-search{min-width:210px;border:1px solid var(--line);border-radius:11px;padding:10px 12px;background:var(--surface);color:var(--ink);font:inherit;font-size:.8rem}
+.app-category-filter{border:1px solid var(--line);border-radius:11px;padding:9px 11px;background:var(--surface);color:var(--ink);font:inherit;font-size:.8rem}
+.app-directory-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.app-card{display:flex;align-items:flex-start;gap:12px;min-width:0;min-height:112px;padding:15px;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--shadow);color:var(--ink);text-align:left;transition:transform .18s,border-color .18s,box-shadow .18s}
+.app-card:hover{transform:translateY(-3px);border-color:#83bfff;box-shadow:0 12px 24px #082d6318}
+.app-card-icon{display:grid;place-items:center;flex:0 0 43px;width:43px;height:43px;border-radius:13px;background:var(--app-color,#2563eb);color:white;font-size:1.35rem;font-weight:900}
+.app-card-copy{min-width:0;display:flex;flex-direction:column;gap:5px}
+.app-card-copy strong{font-size:.84rem;line-height:1.25;overflow-wrap:anywhere}
+.app-card-copy small{font-size:.66rem;color:var(--muted);line-height:1.35}
+.app-card-copy em{font-size:.65rem;color:var(--blue);font-style:normal;font-weight:850;margin-top:auto}
+.app-directory-empty{grid-column:1/-1;padding:30px;border:1px dashed var(--line);border-radius:14px;text-align:center;color:var(--muted);background:var(--surface)}
+body.dark .main-tabs button:hover{background:#17385e;color:#fff}
+@media(max-width:1100px){.app-directory-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.main-tabs{gap:5px;padding:4px}.main-tabs button{padding:10px 5px;font-size:.72rem}.app-directory{padding-top:14px}.app-directory-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.app-card{padding:11px;min-height:100px;gap:9px}.app-card-icon{width:36px;height:36px;flex-basis:36px;font-size:1.1rem}.app-card-copy strong{font-size:.74rem}.app-directory-search{min-width:0;flex:1}}
+@media(max-width:420px){.app-directory-grid{grid-template-columns:1fr}.app-card{min-height:78px}}
+
 </style>
 </head>
 <body>
@@ -751,6 +779,12 @@ html body main #slider .slide figcaption {
 </aside>
 <main id="home">
   <header class="topbar"><div class="school-title"><div class="eyebrow">MEMBENTUK GENERASI PEMIMPIN</div><h1>SEKOLAH BERASRAMA PENUH INTEGRASI KUANTAN</h1></div><div class="tools"><div class="toolgroup" aria-label="Tema"><button id="lightBtn" aria-pressed="true">☀ LIGHT</button><button id="darkBtn" aria-pressed="false">☾ DARK</button></div><div class="toolgroup" aria-label="Saiz tulisan"><button id="fontDown">A−</button><button id="fontReset">A</button><button id="fontUp">A+</button></div><input id="search" class="search" placeholder="⌕ Cari portal..." aria-label="Cari dalam portal"><button class="iconbtn" id="noticeBtn" title="Pengumuman penting">♟ 1</button></div></header>
+  <nav class="main-tabs" aria-label="Tab utama portal" role="tablist">
+    <button type="button" class="active" data-main-tab="home" aria-selected="true">⌂ UTAMA</button>
+    <button type="button" data-main-tab="intek" aria-selected="false">▦ APLIKASI INTEK</button>
+    <button type="button" data-main-tab="kpm" aria-selected="false">▤ APLIKASI KPM</button>
+  </nav>
+  <div id="homeDashboardContent">
   <section class="hero" aria-label="Pengenalan INTEK"><div class="hero-copy"><p class="greeting" id="greeting">Selamat datang, warga INTEK!</p><h2>INTEK SMART<br>PORTAL <span>2027</span></h2><div class="sub">SEKOLAH BERASRAMA PENUH INTEGRASI KUANTAN<br>“WE ARE THE BEST”<br>Membentuk · Generasi · Pemimpin</div><div class="hero-actions"><button class="cta" data-scroll="quick">✦ Akses Pantas</button><button class="cta secondary" data-scroll="events">▦ Kalendar & Program</button></div></div><div class="hero-visual"><img src="assets/intek-campus.jpg" alt="Bangunan utama INTEK Kuantan"><div class="hero-image-accent" aria-hidden="true"></div><div class="clockcard"><div class="clockrow"><div class="clock" id="analogClock" aria-label="Jam analog"><div class="hand h" id="hourHand"></div><div class="hand m" id="minuteHand"></div><div class="hand s" id="secondHand"></div><div class="hub"></div></div><div class="datebox"><div class="weekday" id="weekday">—</div><div class="daynum" id="dayNum">—</div><div class="month" id="monthYear">—</div><div class="digital" id="digitalTime">—</div><div class="hijri" id="hijriDate">Tarikh Hijrah</div></div></div><div class="weather"><span>📍 KUANTAN, PAHANG</span><span>☀ 28°C · CERAH</span></div></div></div><div class="hero-prayer-strip">
   <div class="prayer">
     <div class="prayer-intro"><strong>☾ WAKTU SOLAT</strong><span>KUANTAN, PAHANG<br><span id="prayerStatus" role="status" aria-live="polite">Mengambil data JAKIM…</span></span></div>
@@ -870,6 +904,15 @@ html body main #slider .slide figcaption {
     </div></div>
   </div><section class="slider" id="slider" aria-label="Galeri foto INTEK"><div class="slider-label">GALERI INTEK · KAMPUS & AKTIVITI</div><figure class="slide active"><img src="assets/intek-slide-1.jpg" alt="Bangunan utama INTEK Kuantan"><figcaption>INTEK KUANTAN · MEMBENTUK GENERASI PEMIMPIN</figcaption></figure><figure class="slide"><img src="assets/intek-slide-2.jpg" alt="Suasana dan seni bina sekolah INTEK"><figcaption>ILMU · AKHLAK · KEPIMPINAN · KECEMERLANGAN</figcaption></figure><figure class="slide"><img src="assets/intek-slide-3.jpg" alt="Kampus Sekolah Berasrama Penuh Integrasi Kuantan"><figcaption>INTEK — WE ARE THE BEST</figcaption></figure><div class="slider-dots"><button class="active" aria-label="Foto 1"></button><button aria-label="Foto 2"></button><button aria-label="Foto 3"></button></div></section></section>
   <footer><span>📍 SEKOLAH BERASRAMA PENUH INTEGRASI KUANTAN · BANDAR INDERA MAHKOTA, 25200 KUANTAN, PAHANG</span><span>WE ARE THE BEST · MEMBENTUK GENERASI PEMIMPIN</span></footer>
+  </div>
+  <section id="intekAppsPanel" class="app-directory" aria-labelledby="intekAppsTitle">
+    <div class="app-directory-head"><div><h2 id="intekAppsTitle">APLIKASI INTEK</h2><p>Pusat akses aplikasi dan sistem digital dalaman INTEK.</p></div><div class="app-directory-tools"><input class="app-directory-search" id="intekAppSearch" type="search" placeholder="Cari aplikasi INTEK…" aria-label="Cari aplikasi INTEK"><select class="app-category-filter" id="intekAppCategory" aria-label="Tapis kategori"><option value="">Semua kategori</option></select></div></div>
+    <div class="app-directory-grid" id="intekAppsGrid"><div class="app-directory-empty">Memuatkan senarai aplikasi…</div></div>
+  </section>
+  <section id="kpmAppsPanel" class="app-directory" aria-labelledby="kpmAppsTitle">
+    <div class="app-directory-head"><div><h2 id="kpmAppsTitle">APLIKASI KPM</h2><p>Pusat akses aplikasi rasmi KPM dan agensi berkaitan.</p></div><div class="app-directory-tools"><input class="app-directory-search" id="kpmAppSearch" type="search" placeholder="Cari aplikasi KPM…" aria-label="Cari aplikasi KPM"><select class="app-category-filter" id="kpmAppCategory" aria-label="Tapis kategori"><option value="">Semua kategori</option></select></div></div>
+    <div class="app-directory-grid" id="kpmAppsGrid"><div class="app-directory-empty">Memuatkan senarai aplikasi…</div></div>
+  </section>
 </main></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="modal-backdrop" id="classModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal"><div class="modal-top"><h3 id="modalTitle">Enrolmen mengikut kelas</h3><button class="close" id="closeModal" aria-label="Tutup">×</button></div><p style="color:var(--muted);font-size:.82rem">Pilih kelas untuk melihat bilangan murid lelaki, perempuan dan jumlah.</p><div class="class-picker" id="classPicker"></div><div id="classDetail"><p style="color:var(--muted)">Pilih satu kelas di atas.</p></div></div></div>
@@ -915,6 +958,38 @@ const picker=$('#classPicker');enrolment.forEach(e=>e.classes.forEach(c=>{const 
 // Gunakan URL deployment API yang sama seperti integrasi waktu solat; tambah api=1.
   // GitHub Pages rebuild trigger - 5 November 2026
 const PORTAL_CONTENT_API_URL = 'https://script.google.com/a/macros/moe-dl.edu.my/s/AKfycbz6AiElviuKeWMnrx9_XwIKBjjus1KtdZd3bXqOfDdTlioo0Zzs8Flrahz_SSUaFSaE/exec';
+
+// V21.0 — navigasi tiga tab dan direktori aplikasi daripada Admin Portal.
+let portalApplications=[];
+function setMainTab(name){
+  const valid=['home','intek','kpm'];if(!valid.includes(name))name='home';
+  document.querySelectorAll('[data-main-tab]').forEach(b=>{const on=b.dataset.mainTab===name;b.classList.toggle('active',on);b.setAttribute('aria-selected',on?'true':'false')});
+  $('#homeDashboardContent').style.display=name==='home'?'':'none';
+  $('#intekAppsPanel').classList.toggle('active',name==='intek');
+  $('#kpmAppsPanel').classList.toggle('active',name==='kpm');
+  if(name!=='home')window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('[data-main-tab]').forEach(b=>b.addEventListener('click',()=>setMainTab(b.dataset.mainTab)));
+function appIconMarkup(icon){
+  const value=String(icon||'');
+  if(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(value))return value;
+  const glyphs={'grid-3x3':'▦','calendar-days':'▣','book-open':'▤','users':'♟','clipboard-list':'▤','graduation-cap':'🎓','file-text':'▧','chart-no-axes-column':'▥','database':'▦','monitor':'▣','settings':'⚙','mail':'✉','cloud':'☁','folder':'📁','school':'🏫','clock':'◷','calculator':'∑','flask-conical':'⚗','atom':'⚛','link':'↗'};
+  return glyphs[value]||'↗';
+}
+function renderAppDirectory(tab){
+  const isKpm=tab==='kpm',grid=$(isKpm?'#kpmAppsGrid':'#intekAppsGrid'),search=$(isKpm?'#kpmAppSearch':'#intekAppSearch'),filter=$(isKpm?'#kpmAppCategory':'#intekAppCategory');
+  if(!grid)return;
+  const rows=portalApplications.filter(x=>x&&x.tab===tab&&x.active!==false).sort((a,b)=>(Number(a.order)||999)-(Number(b.order)||999));
+  const categories=[...new Set(rows.map(x=>String(x.category||'Umum')).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ms'));
+  const selected=filter.value;filter.innerHTML='<option value="">Semua kategori</option>'+categories.map(c=>'<option value="'+escapeAppHtml(c)+'">'+escapeAppHtml(c)+'</option>').join('');if(categories.includes(selected))filter.value=selected;
+  const q=(search.value||'').trim().toLocaleLowerCase('ms'),cat=filter.value;
+  const visible=rows.filter(x=>(!cat||String(x.category||'Umum')===cat)&&(!q||(String(x.label||'')+' '+String(x.category||'')+' '+String(x.description||'')).toLocaleLowerCase('ms').includes(q)));
+  if(!visible.length){grid.innerHTML='<div class="app-directory-empty">'+(rows.length?'Tiada aplikasi sepadan dengan carian atau kategori ini.':'Senarai aplikasi belum dikemas kini. Sila hubungi pentadbir portal.')+'</div>';return;}
+  grid.innerHTML=visible.map(x=>`<a class="app-card" href="${escapeAppHtml(x.url)}" target="_blank" rel="noopener noreferrer" style="--app-color:${/^#[0-9a-f]{6}$/i.test(x.color||'')?x.color:'#2563EB'}"><span class="app-card-icon" aria-hidden="true">${escapeAppHtml(appIconMarkup(x.icon))}</span><span class="app-card-copy"><strong>${escapeAppHtml(x.label)}</strong><small>${escapeAppHtml(x.description||x.category||'Aplikasi digital')}</small><em>Buka aplikasi ↗</em></span></a>`).join('');
+}
+function escapeAppHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderPortalApplications(items){portalApplications=Array.isArray(items)?items:[];renderAppDirectory('intek');renderAppDirectory('kpm')}
+['intek','kpm'].forEach(tab=>{const search=$(tab==='kpm'?'#kpmAppSearch':'#intekAppSearch'),filter=$(tab==='kpm'?'#kpmAppCategory':'#intekAppCategory');search.addEventListener('input',()=>renderAppDirectory(tab));filter.addEventListener('change',()=>renderAppDirectory(tab))});
 let portalAnnouncements = [];
 function portalDateParts(value){
   const m = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -1372,6 +1447,7 @@ function renderPortalQuickLinks(items){
     }
   }
   if(Array.isArray(data.countdowns)) renderPortalCountdowns(data.countdowns);
+  renderPortalApplications(data.applications);
   if(Array.isArray(data.announcements)) renderPortalAnnouncements(data.announcements);
   if(Array.isArray(data.slides)) renderPortalSlides(data.slides);
   applyPortalSectionOrder(data.sectionOrder);
