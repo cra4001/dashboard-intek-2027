@@ -967,7 +967,8 @@ function setMainTab(name){
   $('#homeDashboardContent').style.display=name==='home'?'':'none';
   $('#intekAppsPanel').classList.toggle('active',name==='intek');
   $('#kpmAppsPanel').classList.toggle('active',name==='kpm');
-  if(name!=='home')window.scrollTo({top:0,behavior:'smooth'});
+  // Mobile UX fix V21.0.1: jangan paksa halaman kembali ke bahagian atas apabila tab aplikasi dipilih.
+  // Kekalkan kedudukan scroll semasa supaya pengguna tidak terlompat ke Statistik Pelawat.
 }
 document.querySelectorAll('[data-main-tab]').forEach(b=>b.addEventListener('click',()=>setMainTab(b.dataset.mainTab)));
 function appIconMarkup(icon){
