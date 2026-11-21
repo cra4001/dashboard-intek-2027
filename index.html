@@ -8,7 +8,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#082d63">
 <meta name="description" content="INTEK Smart Portal 2027 — pusat maklumat dan pautan Sekolah Berasrama Penuh Integrasi Kuantan.">
 <title>INTEK Smart Portal 2027</title>
-<meta name="portal-build" content="V21.3.2 · Countdown Event Status Styling & Application Directory">
+<meta name="portal-build" content="V21.3.3 · Completed Event Elapsed Days & Application Directory">
 <style>
 :root{--navy:#082d63;--navy2:#041b3e;--blue:#0878e8;--gold:#f7c644;--gold2:#ffe9a2;--bg:#f1f6fd;--surface:#fff;--ink:#102e5e;--muted:#637795;--line:#d8e5f5;--shadow:0 8px 24px #123e7110;--radius:18px;--scale:1}
 *{box-sizing:border-box}html{font-size:calc(16px * var(--scale));scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-weight:650;transition:background .2s,color .2s}body.dark{--bg:#07162a;--surface:#102541;--ink:#edf5ff;--muted:#b4c6df;--line:#2a4365;--shadow:0 8px 24px #0003;--navy:#0b2b54}button,input,a{font:inherit}button{cursor:pointer;font-weight:800}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f7c644;outline-offset:2px}.shell{min-height:100vh;display:grid;grid-template-columns:236px minmax(0,1fr)}
@@ -984,7 +984,10 @@ function updateCountdowns(){
       status.textContent=String(elapsed)+' telah berlalu';
       card.classList.add('elapsed');
     }else{
-      num.textContent='✓';
+      // Acara telah tamat: kekalkan jumlah hari yang berlalu sejak tarikh mula,
+      // tetapi status kekal ringkas sebagai Selesai dan kad bertukar kelabu.
+      const elapsed=dayNumber(today)-dayNumber(start);
+      num.textContent=String(elapsed).padStart(3,'0');
       status.textContent='Selesai';
       card.classList.add('finished');
     }
