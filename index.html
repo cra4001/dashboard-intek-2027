@@ -981,14 +981,14 @@ function updateCountdowns(){
     }else if(today<=end){
       const elapsed=dayNumber(today)-dayNumber(start);
       num.textContent=String(elapsed).padStart(3,'0');
-      status.textContent=String(elapsed)+' telah berlalu';
+      status.textContent=String(elapsed)+' hari telah berlalu';
       card.classList.add('elapsed');
     }else{
       // Acara telah tamat: kekalkan jumlah hari yang berlalu sejak tarikh mula,
       // tetapi status kekal ringkas sebagai Selesai dan kad bertukar kelabu.
       const elapsed=dayNumber(today)-dayNumber(start);
       num.textContent=String(elapsed).padStart(3,'0');
-      status.textContent='Selesai';
+      status.textContent='hari telah Selesai';
       card.classList.add('finished');
     }
   });
