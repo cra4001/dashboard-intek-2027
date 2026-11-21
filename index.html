@@ -8,7 +8,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#082d63">
 <meta name="description" content="INTEK Smart Portal 2027 — pusat maklumat dan pautan Sekolah Berasrama Penuh Integrasi Kuantan.">
 <title>INTEK Smart Portal 2027</title>
-<meta name="portal-build" content="V21.0 · Three Main Tabs & Application Directory">
+<meta name="portal-build" content="V21.1 · Countdown Event Duration & Application Directory">
 <style>
 :root{--navy:#082d63;--navy2:#041b3e;--blue:#0878e8;--gold:#f7c644;--gold2:#ffe9a2;--bg:#f1f6fd;--surface:#fff;--ink:#102e5e;--muted:#637795;--line:#d8e5f5;--shadow:0 8px 24px #123e7110;--radius:18px;--scale:1}
 *{box-sizing:border-box}html{font-size:calc(16px * var(--scale));scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-weight:650;transition:background .2s,color .2s}body.dark{--bg:#07162a;--surface:#102541;--ink:#edf5ff;--muted:#b4c6df;--line:#2a4365;--shadow:0 8px 24px #0003;--navy:#0b2b54}button,input,a{font:inherit}button{cursor:pointer;font-weight:800}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f7c644;outline-offset:2px}.shell{min-height:100vh;display:grid;grid-template-columns:236px minmax(0,1fr)}
@@ -927,26 +927,33 @@ function drawClock(){const d=nowMY(),h=d.getHours(),m=d.getMinutes(),s=d.getSeco
 (function(){const c=$('#analogClock');for(let i=0;i<12;i++){const a=i*30*Math.PI/180;const el=document.createElement('span');el.className='num';const major= i%3===0;el.textContent=major?({0:'12',3:'3',6:'6',9:'9'})[i]:'•';el.style.fontSize=major?'8px':'7px';const r=major?36:39;el.style.left=(50+Math.sin(a)*r)+'%';el.style.top=(50-Math.cos(a)*r)+'%';el.setAttribute('aria-hidden','true');c.appendChild(el)}})();
 function updateCountdowns(){
   const now=nowMY();
+  const today=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+  const dayNumber=value=>Date.UTC(Number(value.slice(0,4)),Number(value.slice(5,7))-1,Number(value.slice(8,10)))/86400000;
   $$('.count-card').forEach(card=>{
-    const target=new Date(card.dataset.date);
-    const days=Math.ceil((target-now)/86400000);
+    const start=card.dataset.startDate||String(card.dataset.date||'').slice(0,10);
+    const end=card.dataset.endDate||start;
     const num=card.querySelector('.count-number');
     const status=card.querySelector('.count-status');
-    if(!num||!status||isNaN(target.getTime())) return;
-    card.classList.remove('urgent');
-    if(days>0){
+    if(!num||!status||!/^\\d{4}-\\d{2}-\\d{2}$/.test(start)||!/^\\d{4}-\\d{2}-\\d{2}$/.test(end)) return;
+    card.classList.remove('urgent','done','finished');
+    if(today<start){
+      const days=dayNumber(start)-dayNumber(today);
       num.textContent=String(days).padStart(3,'0');
       status.textContent='HARI LAGI';
-      card.classList.remove('done');
       if(days<10)card.classList.add('urgent');
-    }else if(days===0){
-      num.textContent='00';
-      status.textContent='HARI INI';
+    }else if(today===start){
+      num.textContent='✓';
+      status.textContent='SEDANG BERLANGSUNG';
+      card.classList.add('done');
+    }else if(today<=end){
+      const elapsed=dayNumber(today)-dayNumber(start);
+      num.textContent=String(elapsed).padStart(3,'0');
+      status.textContent='HARI SEJAK MULA';
       card.classList.add('done');
     }else{
       num.textContent='✓';
-      status.textContent='TARIKH TELAH TIBA';
-      card.classList.add('done');
+      status.textContent='Selesai';
+      card.classList.add('done','finished');
     }
   });
 }
@@ -1036,7 +1043,11 @@ function renderPortalAnnouncements(items){
 function renderPortalCountdowns(items){
   const grid=$('.count-grid');
   if(!grid||!Array.isArray(items)) return;
-  const active=items.filter(x=>x&&x.active!==false&&String(x.title||'').trim()&&/^\d{4}-\d{2}-\d{2}$/.test(String(x.date||'')));
+  const active=items.filter(x=>{
+    if(!x||x.active===false||!String(x.title||'').trim())return false;
+    const start=String(x.startDate||x.date||''),end=String(x.endDate||x.startDate||x.date||'');
+    return /^\d{4}-\d{2}-\d{2}$/.test(start)&&/^\d{4}-\d{2}-\d{2}$/.test(end)&&end>=start;
+  });
 
   // Data API ialah sumber utama. Jangan kekalkan kad statik lama jika
   // Admin Panel menghantar senarai kosong atau tiada rekod yang sah.
@@ -1049,14 +1060,15 @@ function renderPortalCountdowns(items){
     return;
   }
   active.slice(0,12).forEach(item=>{
-    const date=String(item.date);
-    const target=new Date(date+'T00:00:00+08:00');
-    const dateLabel=new Intl.DateTimeFormat('en-GB',{
+    const date=String(item.startDate||item.date);
+    const endDate=String(item.endDate||item.startDate||item.date);
+    const formatDate=value=>new Intl.DateTimeFormat('en-GB',{
       day:'2-digit',month:'short',year:'numeric',timeZone:'Asia/Kuala_Lumpur'
-    }).format(target).replace(/ /g,' ').toUpperCase();
+    }).format(new Date(value+'T00:00:00+08:00')).toUpperCase();
+    const dateLabel=date===endDate?formatDate(date):formatDate(date)+' – '+formatDate(endDate);
     const card=document.createElement('div');
     card.className='count-card';
-    card.dataset.date=date+'T00:00:00+08:00';
+    card.dataset.date=date+'T00:00:00+08:00';\n    card.dataset.startDate=date;\n    card.dataset.endDate=endDate;
     const icon=document.createElement('div');
     icon.className='cicon';
     icon.textContent=String(item.icon||'📅');
