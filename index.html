@@ -1068,7 +1068,9 @@ function renderPortalCountdowns(items){
     const dateLabel=date===endDate?formatDate(date):formatDate(date)+' – '+formatDate(endDate);
     const card=document.createElement('div');
     card.className='count-card';
-    card.dataset.date=date+'T00:00:00+08:00';\n    card.dataset.startDate=date;\n    card.dataset.endDate=endDate;
+    card.dataset.date=date+'T00:00:00+08:00';
+    card.dataset.startDate=date;
+    card.dataset.endDate=endDate;
     const icon=document.createElement('div');
     icon.className='cicon';
     icon.textContent=String(item.icon||'📅');
