@@ -934,7 +934,7 @@ function updateCountdowns(){
     const end=card.dataset.endDate||start;
     const num=card.querySelector('.count-number');
     const status=card.querySelector('.count-status');
-    if(!num||!status||!/^\\d{4}-\\d{2}-\\d{2}$/.test(start)||!/^\\d{4}-\\d{2}-\\d{2}$/.test(end)) return;
+    if(!num||!status||!/^\d{4}-\d{2}-\d{2}$/.test(start)||!/^\d{4}-\d{2}-\d{2}$/.test(end)) return;
     card.classList.remove('urgent','done','finished');
     if(today<start){
       const days=dayNumber(start)-dayNumber(today);
