@@ -981,14 +981,14 @@ function updateCountdowns(){
     }else if(today<=end){
       const elapsed=dayNumber(today)-dayNumber(start);
       num.textContent=String(elapsed).padStart(3,'0');
-      status.textContent=String(elapsed)+' hari telah berlalu';
+      status.textContent=String(elapsed)+' telah berlalu';
       card.classList.add('elapsed');
     }else{
       // Acara telah tamat: kekalkan jumlah hari yang berlalu sejak tarikh mula,
       // tetapi status kekal ringkas sebagai Selesai dan kad bertukar kelabu.
       const elapsed=dayNumber(today)-dayNumber(start);
       num.textContent=String(elapsed).padStart(3,'0');
-      status.textContent='hari telah Selesai';
+      status.textContent='Selesai';
       card.classList.add('finished');
     }
   });
@@ -1000,7 +1000,7 @@ const picker=$('#classPicker');enrolment.forEach(e=>e.classes.forEach(c=>{const 
 // INTEK Smart Portal — kandungan ticker dan pengumuman daripada Public API.
 // Gunakan URL deployment API yang sama seperti integrasi waktu solat; tambah api=1.
   // GitHub Pages rebuild trigger - 5 November 2026
-const PORTAL_CONTENT_API_URL = 'https://script.google.com/a/macros/moe-dl.edu.my/s/AKfycbz6AiElviuKeWMnrx9_XwIKBjjus1KtdZd3bXqOfDdTlioo0Zzs8Flrahz_SSUaFSaE/exec';
+const PORTAL_CONTENT_API_URL = 'https://script.google.com/macros/s/AKfycbz6AiElviuKeWMnrx9_XwIKBjjus1KtdZd3bXqOfDdTlioo0Zzs8Flrahz_SSUaFSaE/exec';
 
 // V21.0 — navigasi tiga tab dan direktori aplikasi daripada Admin Portal.
 let portalApplications=[];
