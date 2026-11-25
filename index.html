@@ -8,7 +8,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#082d63">
 <meta name="description" content="INTEK Smart Portal 2027 — pusat maklumat dan pautan Sekolah Berasrama Penuh Integrasi Kuantan.">
 <title>INTEK Smart Portal 2027</title>
-<meta name="portal-build" content="V21.3.3 · Completed Event Elapsed Days & Application Directory">
+<meta name="portal-build" content="V21.3.5 · Mobile Application Directory Reliability Fix">
 <style>
 :root{--navy:#082d63;--navy2:#041b3e;--blue:#0878e8;--gold:#f7c644;--gold2:#ffe9a2;--bg:#f1f6fd;--surface:#fff;--ink:#102e5e;--muted:#637795;--line:#d8e5f5;--shadow:0 8px 24px #123e7110;--radius:18px;--scale:1}
 *{box-sizing:border-box}html{font-size:calc(16px * var(--scale));scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-weight:650;transition:background .2s,color .2s}body.dark{--bg:#07162a;--surface:#102541;--ink:#edf5ff;--muted:#b4c6df;--line:#2a4365;--shadow:0 8px 24px #0003;--navy:#0b2b54}button,input,a{font:inherit}button{cursor:pointer;font-weight:800}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f7c644;outline-offset:2px}.shell{min-height:100vh;display:grid;grid-template-columns:236px minmax(0,1fr)}
@@ -1075,18 +1075,44 @@ function appIconMarkup(icon){
   return glyphs[value]||'↗';
 }
 function renderAppDirectory(tab){
-  const isKpm=tab==='kpm',grid=$(isKpm?'#kpmAppsGrid':'#intekAppsGrid'),search=$(isKpm?'#kpmAppSearch':'#intekAppSearch'),filter=$(isKpm?'#kpmAppCategory':'#intekAppCategory');
+  const isKpm=tab==='kpm';
+  const grid=$(isKpm?'#kpmAppsGrid':'#intekAppsGrid');
+  const search=$(isKpm?'#kpmAppSearch':'#intekAppSearch');
+  const filter=$(isKpm?'#kpmAppCategory':'#intekAppCategory');
   if(!grid)return;
-  const rows=portalApplications.filter(x=>x&&x.tab===tab&&x.active!==false).sort((a,b)=>(Number(a.order)||999)-(Number(b.order)||999));
-  const categories=[...new Set(rows.map(x=>String(x.category||'Umum')).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ms'));
-  const selected=filter.value;filter.innerHTML='<option value="">Semua kategori</option>'+categories.map(c=>'<option value="'+escapeAppHtml(c)+'">'+escapeAppHtml(c)+'</option>').join('');if(categories.includes(selected))filter.value=selected;
-  const q=(search.value||'').trim().toLocaleLowerCase('ms'),cat=filter.value;
-  const visible=rows.filter(x=>(!cat||String(x.category||'Umum')===cat)&&(!q||(String(x.label||'')+' '+String(x.category||'')+' '+String(x.description||'')).toLocaleLowerCase('ms').includes(q)));
-  if(!visible.length){grid.innerHTML='<div class="app-directory-empty">'+(rows.length?'Tiada aplikasi sepadan dengan carian atau kategori ini.':'Senarai aplikasi belum dikemas kini. Sila hubungi pentadbir portal.')+'</div>';return;}
-  grid.innerHTML=visible.map(x=>`<a class="app-card" href="${escapeAppHtml(x.url)}" target="_blank" rel="noopener noreferrer" style="--app-color:${/^#[0-9a-f]{6}$/i.test(x.color||'')?x.color:'#2563EB'}"><span class="app-card-icon" aria-hidden="true">${escapeAppHtml(appIconMarkup(x.icon))}</span><span class="app-card-copy"><strong>${escapeAppHtml(x.label)}</strong><small>${escapeAppHtml(x.description||x.category||'Aplikasi digital')}</small><em>Buka aplikasi ↗</em></span></a>`).join('');
+  try{
+    const rows=portalApplications
+      .filter(x=>x&&x.tab===tab&&x.active!==false&&String(x.url||'').trim())
+      .sort((a,b)=>(Number(a.order)||999)-(Number(b.order)||999));
+    const categories=[...new Set(rows.map(x=>String(x.category||'Umum')).filter(Boolean))]
+      .sort((a,b)=>a.localeCompare(b));
+    const selected=filter?filter.value:'';
+    if(filter){
+      filter.innerHTML='<option value="">Semua kategori</option>'+categories.map(c=>'<option value="'+escapeAppHtml(c)+'">'+escapeAppHtml(c)+'</option>').join('');
+      if(categories.includes(selected))filter.value=selected;
+    }
+    const q=(search&&search.value?search.value:'').trim().toLowerCase();
+    const cat=filter?filter.value:'';
+    const visible=rows.filter(x=>(!cat||String(x.category||'Umum')===cat)&&
+      (!q||(String(x.label||'')+' '+String(x.category||'')+' '+String(x.description||'')).toLowerCase().includes(q)));
+    if(!visible.length){
+      grid.innerHTML='<div class="app-directory-empty">'+
+        (rows.length?'Tiada aplikasi sepadan dengan carian atau kategori ini.':'Senarai aplikasi belum dikemas kini. Sila hubungi pentadbir portal.')+
+        '</div>';
+      return;
+    }
+    grid.innerHTML=visible.map(x=>`<a class="app-card" href="${escapeAppHtml(x.url)}" target="_blank" rel="noopener noreferrer" style="--app-color:${/^#[0-9a-f]{6}$/i.test(x.color||'')?x.color:'#2563EB'}"><span class="app-card-icon" aria-hidden="true">${escapeAppHtml(appIconMarkup(x.icon))}</span><span class="app-card-copy"><strong>${escapeAppHtml(x.label||'Aplikasi')}</strong><small>${escapeAppHtml(x.description||x.category||'Aplikasi digital')}</small><em>Buka aplikasi ↗</em></span></a>`).join('');
+  }catch(err){
+    console.error('Ralat paparan direktori '+tab+':',err);
+    grid.innerHTML='<div class="app-directory-empty">Senarai aplikasi tidak dapat dipaparkan. Sila muat semula portal.</div>';
+  }
 }
 function escapeAppHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function renderPortalApplications(items){portalApplications=Array.isArray(items)?items:[];renderAppDirectory('intek');renderAppDirectory('kpm')}
+function renderPortalApplications(items){
+  portalApplications=Array.isArray(items)?items:[];
+  renderAppDirectory('intek');
+  renderAppDirectory('kpm');
+}
 ['intek','kpm'].forEach(tab=>{const search=$(tab==='kpm'?'#kpmAppSearch':'#intekAppSearch'),filter=$(tab==='kpm'?'#kpmAppCategory':'#intekAppCategory');search.addEventListener('input',()=>renderAppDirectory(tab));filter.addEventListener('change',()=>renderAppDirectory(tab))});
 let portalAnnouncements = [];
 function portalDateParts(value){
@@ -1530,11 +1556,23 @@ function renderPortalQuickLinks(items){
   function applyPortalContent(payload){
   if(!payload || payload.ok !== true || !payload.data) return;
   const data=payload.data;
+  // Direktori aplikasi dipaparkan dahulu supaya ralat komponen dashboard lain
+  // tidak boleh menghalang senarai aplikasi daripada dirender.
+  try{
+    if(Array.isArray(data.applications)) renderPortalApplications(data.applications);
+    else renderPortalApplications([]);
+  }catch(appError){
+    console.error('Ralat memaparkan direktori aplikasi:',appError);
+    ['#intekAppsGrid','#kpmAppsGrid'].forEach(selector=>{
+      const grid=$(selector);
+      if(grid)grid.innerHTML='<div class="app-directory-empty">Senarai aplikasi tidak dapat dipaparkan. Sila muat semula portal.</div>';
+    });
+  }
   configureIslamicQuotes(data);
   renderPortalStatsAndEnrolment(data);
   if(Array.isArray(data.quickLinks)) renderPortalQuickLinks(data.quickLinks);
-    renderWeeklyInfo(data.weeklyInfo, data);
-    if(Array.isArray(data.menuLinks)) renderPortalMenu(data.menuLinks);
+  renderWeeklyInfo(data.weeklyInfo, data);
+  if(Array.isArray(data.menuLinks)) renderPortalMenu(data.menuLinks);
   {
     const ticker=$('#portalTickerText');
     if(ticker){
@@ -1552,7 +1590,6 @@ function renderPortalQuickLinks(items){
     }
   }
   if(Array.isArray(data.countdowns)) renderPortalCountdowns(data.countdowns);
-  renderPortalApplications(data.applications);
   if(Array.isArray(data.announcements)) renderPortalAnnouncements(data.announcements);
   if(Array.isArray(data.slides)) renderPortalSlides(data.slides);
   applyPortalSectionOrder(data.sectionOrder);
@@ -1560,22 +1597,42 @@ function renderPortalQuickLinks(items){
 function loadPortalContent(){
   const callback='__intekPortalCallback_'+Date.now()+'_'+Math.floor(Math.random()*100000);
   let script=null, timer=null, finished=false;
-  const cleanup=()=>{if(finished)return;finished=true;if(script)script.remove();if(timer)clearTimeout(timer);try{delete window[callback];}catch(e){window[callback]=undefined;}};
+  const cleanup=()=>{
+    if(finished)return;
+    finished=true;
+    if(script)script.remove();
+    if(timer)clearTimeout(timer);
+    try{delete window[callback];}catch(e){window[callback]=undefined;}
+  };
+  const showApiFailure=()=>{
+    const ticker=$('#portalTickerText');
+    if(ticker){ticker.replaceChildren();const msg=document.createElement('span');msg.textContent='Maklumat akan dikemas kini.';ticker.appendChild(msg);}
+    const countGrid=$('.count-grid');
+    if(countGrid){countGrid.replaceChildren();const msg=document.createElement('p');msg.className='count-note';msg.textContent='Data countdown belum dapat dimuatkan.';countGrid.appendChild(msg);}
+    ['#intekAppsGrid','#kpmAppsGrid'].forEach(selector=>{
+      const grid=$(selector);
+      if(grid)grid.innerHTML='<div class="app-directory-empty">Sambungan data aplikasi belum berjaya. Sila muat semula portal.</div>';
+    });
+    document.documentElement.classList.remove('portal-content-pending');
+  };
   window[callback]=payload=>{
     cleanup();
-    applyPortalContent(payload);
-    document.documentElement.classList.remove('portal-content-pending');
+    try{
+      if(!payload||payload.ok!==true||!payload.data)throw new Error('Respons Public API tidak sah.');
+      applyPortalContent(payload);
+    }catch(err){
+      console.error('Ralat memproses kandungan Public API INTEK:',err);
+      showApiFailure();
+    }finally{
+      document.documentElement.classList.remove('portal-content-pending');
+    }
   };
   script=document.createElement('script');
   script.src=PORTAL_CONTENT_API_URL+'?api=1&callback='+encodeURIComponent(callback)+'&_='+Date.now();
   script.async=true;
   const finishWithoutApi=()=>{
     cleanup();
-    const ticker=$('#portalTickerText');
-    if(ticker){ticker.replaceChildren();const msg=document.createElement('span');msg.textContent='Maklumat akan dikemas kini.';ticker.appendChild(msg);}
-    const grid=$('.count-grid');
-    if(grid){grid.replaceChildren();const msg=document.createElement('p');msg.className='count-note';msg.textContent='Data countdown belum dapat dimuatkan.';grid.appendChild(msg);}
-    document.documentElement.classList.remove('portal-content-pending');
+    showApiFailure();
   };
   script.onerror=finishWithoutApi;
   timer=setTimeout(finishWithoutApi,12000);
