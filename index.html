@@ -8,7 +8,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#082d63">
 <meta name="description" content="INTEK Smart Portal 2027 — pusat maklumat dan pautan Sekolah Berasrama Penuh Integrasi Kuantan.">
 <title>INTEK Smart Portal 2027</title>
-<meta name="portal-build" content="V21.3.5 · Mobile Application Directory Reliability Fix">
+<meta name="portal-build" content="V21.3.6 · Isolated Application Rendering Recovery">
 <style>
 :root{--navy:#082d63;--navy2:#041b3e;--blue:#0878e8;--gold:#f7c644;--gold2:#ffe9a2;--bg:#f1f6fd;--surface:#fff;--ink:#102e5e;--muted:#637795;--line:#d8e5f5;--shadow:0 8px 24px #123e7110;--radius:18px;--scale:1}
 *{box-sizing:border-box}html{font-size:calc(16px * var(--scale));scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-weight:650;transition:background .2s,color .2s}body.dark{--bg:#07162a;--surface:#102541;--ink:#edf5ff;--muted:#b4c6df;--line:#2a4365;--shadow:0 8px 24px #0003;--navy:#0b2b54}button,input,a{font:inherit}button{cursor:pointer;font-weight:800}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f7c644;outline-offset:2px}.shell{min-height:100vh;display:grid;grid-template-columns:236px minmax(0,1fr)}
@@ -1554,13 +1554,13 @@ function renderPortalQuickLinks(items){
     if(host && Array.isArray(order)) host.dataset.savedSectionOrder=order.join(',');
   }
   function applyPortalContent(payload){
-  if(!payload || payload.ok !== true || !payload.data) return;
+  if(!payload || payload.ok !== true || !payload.data) throw new Error('Respons Public API tidak sah.');
   const data=payload.data;
-  // Direktori aplikasi dipaparkan dahulu supaya ralat komponen dashboard lain
-  // tidak boleh menghalang senarai aplikasi daripada dirender.
+
+  // Direktori aplikasi diproses secara berasingan. Kegagalan komponen dashboard
+  // lain tidak boleh memadam atau menyembunyikan senarai aplikasi yang berjaya diterima.
   try{
-    if(Array.isArray(data.applications)) renderPortalApplications(data.applications);
-    else renderPortalApplications([]);
+    renderPortalApplications(Array.isArray(data.applications)?data.applications:[]);
   }catch(appError){
     console.error('Ralat memaparkan direktori aplikasi:',appError);
     ['#intekAppsGrid','#kpmAppsGrid'].forEach(selector=>{
@@ -1568,31 +1568,35 @@ function renderPortalQuickLinks(items){
       if(grid)grid.innerHTML='<div class="app-directory-empty">Senarai aplikasi tidak dapat dipaparkan. Sila muat semula portal.</div>';
     });
   }
-  configureIslamicQuotes(data);
-  renderPortalStatsAndEnrolment(data);
-  if(Array.isArray(data.quickLinks)) renderPortalQuickLinks(data.quickLinks);
-  renderWeeklyInfo(data.weeklyInfo, data);
-  if(Array.isArray(data.menuLinks)) renderPortalMenu(data.menuLinks);
-  {
+
+  const safeApply=(label,fn)=>{
+    try{fn();}
+    catch(err){console.error('Ralat komponen '+label+':',err);}
+  };
+  safeApply('Mutiara Kata',()=>configureIslamicQuotes(data));
+  safeApply('Statistik dan enrolmen',()=>renderPortalStatsAndEnrolment(data));
+  if(Array.isArray(data.quickLinks)) safeApply('Pautan Pantas',()=>renderPortalQuickLinks(data.quickLinks));
+  safeApply('Info Mingguan',()=>renderWeeklyInfo(data.weeklyInfo,data));
+  if(Array.isArray(data.menuLinks)) safeApply('Menu Portal',()=>renderPortalMenu(data.menuLinks));
+  safeApply('Ticker',()=>{
     const ticker=$('#portalTickerText');
-    if(ticker){
-      const tickerValue=typeof data.tickerText==='string' ? data.tickerText.trim() : '';
-      ticker.replaceChildren();
-      if(tickerValue){
-        const first=document.createElement('span'); first.textContent=tickerValue;
-        const second=document.createElement('span'); second.textContent=tickerValue; second.setAttribute('aria-hidden','true');
-        ticker.append(first,second);
-      }else{
-        const placeholder=document.createElement('span');
-        placeholder.textContent='Maklumat akan dikemas kini.';
-        ticker.appendChild(placeholder);
-      }
+    if(!ticker)return;
+    const tickerValue=typeof data.tickerText==='string'?data.tickerText.trim():'';
+    ticker.replaceChildren();
+    if(tickerValue){
+      const first=document.createElement('span');first.textContent=tickerValue;
+      const second=document.createElement('span');second.textContent=tickerValue;second.setAttribute('aria-hidden','true');
+      ticker.append(first,second);
+    }else{
+      const placeholder=document.createElement('span');
+      placeholder.textContent='Maklumat akan dikemas kini.';
+      ticker.appendChild(placeholder);
     }
-  }
-  if(Array.isArray(data.countdowns)) renderPortalCountdowns(data.countdowns);
-  if(Array.isArray(data.announcements)) renderPortalAnnouncements(data.announcements);
-  if(Array.isArray(data.slides)) renderPortalSlides(data.slides);
-  applyPortalSectionOrder(data.sectionOrder);
+  });
+  if(Array.isArray(data.countdowns)) safeApply('Countdown',()=>renderPortalCountdowns(data.countdowns));
+  if(Array.isArray(data.announcements)) safeApply('Pengumuman',()=>renderPortalAnnouncements(data.announcements));
+  if(Array.isArray(data.slides)) safeApply('Slider',()=>renderPortalSlides(data.slides));
+  safeApply('Susunan seksyen',()=>applyPortalSectionOrder(data.sectionOrder));
 }
 function loadPortalContent(){
   const callback='__intekPortalCallback_'+Date.now()+'_'+Math.floor(Math.random()*100000);
@@ -1622,7 +1626,12 @@ function loadPortalContent(){
       applyPortalContent(payload);
     }catch(err){
       console.error('Ralat memproses kandungan Public API INTEK:',err);
-      showApiFailure();
+      // Respons API sudah diterima; jangan tukar direktori aplikasi kepada
+      // mesej kegagalan sambungan hanya kerana komponen lain gagal diproses.
+      const ticker=$('#portalTickerText');
+      if(ticker && !ticker.textContent.trim()){
+        const msg=document.createElement('span');msg.textContent='Maklumat akan dikemas kini.';ticker.appendChild(msg);
+      }
     }finally{
       document.documentElement.classList.remove('portal-content-pending');
     }
