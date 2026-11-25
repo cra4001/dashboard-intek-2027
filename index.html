@@ -8,7 +8,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#082d63">
 <meta name="description" content="INTEK Smart Portal 2027 — pusat maklumat dan pautan Sekolah Berasrama Penuh Integrasi Kuantan.">
 <title>INTEK Smart Portal 2027</title>
-<meta name="portal-build" content="V21.3.6 · Isolated Application Rendering Recovery">
+<meta name="portal-build" content="V21.3.7 · Smart API Retry & Recovery">
 <style>
 :root{--navy:#082d63;--navy2:#041b3e;--blue:#0878e8;--gold:#f7c644;--gold2:#ffe9a2;--bg:#f1f6fd;--surface:#fff;--ink:#102e5e;--muted:#637795;--line:#d8e5f5;--shadow:0 8px 24px #123e7110;--radius:18px;--scale:1}
 *{box-sizing:border-box}html{font-size:calc(16px * var(--scale));scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-weight:650;transition:background .2s,color .2s}body.dark{--bg:#07162a;--surface:#102541;--ink:#edf5ff;--muted:#b4c6df;--line:#2a4365;--shadow:0 8px 24px #0003;--navy:#0b2b54}button,input,a{font:inherit}button{cursor:pointer;font-weight:800}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f7c644;outline-offset:2px}.shell{min-height:100vh;display:grid;grid-template-columns:236px minmax(0,1fr)}
@@ -1599,53 +1599,106 @@ function renderPortalQuickLinks(items){
   safeApply('Susunan seksyen',()=>applyPortalSectionOrder(data.sectionOrder));
 }
 function loadPortalContent(){
-  const callback='__intekPortalCallback_'+Date.now()+'_'+Math.floor(Math.random()*100000);
-  let script=null, timer=null, finished=false;
-  const cleanup=()=>{
-    if(finished)return;
-    finished=true;
-    if(script)script.remove();
-    if(timer)clearTimeout(timer);
-    try{delete window[callback];}catch(e){window[callback]=undefined;}
-  };
+  const MAX_ATTEMPTS=3;
+  const REQUEST_TIMEOUT_MS=18000;
+  const RETRY_DELAYS_MS=[800,1800];
+  let attempt=0;
+  let retryTimer=null;
+
   const showApiFailure=()=>{
     const ticker=$('#portalTickerText');
-    if(ticker){ticker.replaceChildren();const msg=document.createElement('span');msg.textContent='Maklumat akan dikemas kini.';ticker.appendChild(msg);}
+    if(ticker){
+      ticker.replaceChildren();
+      const msg=document.createElement('span');
+      msg.textContent='Maklumat akan dikemas kini.';
+      ticker.appendChild(msg);
+    }
     const countGrid=$('.count-grid');
-    if(countGrid){countGrid.replaceChildren();const msg=document.createElement('p');msg.className='count-note';msg.textContent='Data countdown belum dapat dimuatkan.';countGrid.appendChild(msg);}
+    if(countGrid){
+      countGrid.replaceChildren();
+      const msg=document.createElement('p');
+      msg.className='count-note';
+      msg.textContent='Data countdown belum dapat dimuatkan.';
+      countGrid.appendChild(msg);
+    }
     ['#intekAppsGrid','#kpmAppsGrid'].forEach(selector=>{
       const grid=$(selector);
-      if(grid)grid.innerHTML='<div class="app-directory-empty">Sambungan data aplikasi belum berjaya. Sila muat semula portal.</div>';
+      if(grid)grid.innerHTML='<div class="app-directory-empty">Sambungan data aplikasi belum berjaya selepas beberapa percubaan. Sila cuba muat semula portal.</div>';
     });
     document.documentElement.classList.remove('portal-content-pending');
+    console.error('Public API INTEK gagal selepas '+MAX_ATTEMPTS+' percubaan.');
   };
-  window[callback]=payload=>{
-    cleanup();
-    try{
-      if(!payload||payload.ok!==true||!payload.data)throw new Error('Respons Public API tidak sah.');
-      applyPortalContent(payload);
-    }catch(err){
-      console.error('Ralat memproses kandungan Public API INTEK:',err);
-      // Respons API sudah diterima; jangan tukar direktori aplikasi kepada
-      // mesej kegagalan sambungan hanya kerana komponen lain gagal diproses.
-      const ticker=$('#portalTickerText');
-      if(ticker && !ticker.textContent.trim()){
-        const msg=document.createElement('span');msg.textContent='Maklumat akan dikemas kini.';ticker.appendChild(msg);
-      }
-    }finally{
-      document.documentElement.classList.remove('portal-content-pending');
+
+  const retryOrFail=(reason)=>{
+    console.warn('Public API INTEK: percubaan '+attempt+'/'+MAX_ATTEMPTS+' gagal.',reason||'Tiada respons callback.');
+    if(attempt<MAX_ATTEMPTS){
+      const delay=RETRY_DELAYS_MS[attempt-1]||1800;
+      retryTimer=setTimeout(runAttempt,delay);
+    }else{
+      showApiFailure();
     }
   };
-  script=document.createElement('script');
-  script.src=PORTAL_CONTENT_API_URL+'?api=1&callback='+encodeURIComponent(callback)+'&_='+Date.now();
-  script.async=true;
-  const finishWithoutApi=()=>{
-    cleanup();
-    showApiFailure();
-  };
-  script.onerror=finishWithoutApi;
-  timer=setTimeout(finishWithoutApi,12000);
-  document.head.appendChild(script);
+
+  function runAttempt(){
+    if(retryTimer){clearTimeout(retryTimer);retryTimer=null;}
+    attempt++;
+
+    const callback='__intekPortalCallback_'+Date.now()+'_'+attempt+'_'+Math.floor(Math.random()*100000);
+    let script=document.createElement('script');
+    let timer=null;
+    let settled=false;
+
+    const cleanup=()=>{
+      if(settled)return;
+      settled=true;
+      if(timer)clearTimeout(timer);
+      if(script){
+        script.onerror=null;
+        script.remove();
+        script=null;
+      }
+      try{delete window[callback];}
+      catch(e){window[callback]=undefined;}
+    };
+
+    const fail=(reason)=>{
+      if(settled)return;
+      cleanup();
+      retryOrFail(reason);
+    };
+
+    window[callback]=payload=>{
+      if(settled)return;
+      cleanup();
+
+      if(!payload||payload.ok!==true||!payload.data){
+        retryOrFail('Respons JSONP tidak sah.');
+        return;
+      }
+
+      try{
+        applyPortalContent(payload);
+        document.documentElement.classList.remove('portal-content-pending');
+        console.info('Public API INTEK berjaya dimuatkan pada percubaan '+attempt+'.');
+      }catch(err){
+        console.error('Ralat memproses kandungan Public API INTEK:',err);
+        // API telah memberi respons sah. Jangan ulang permintaan rangkaian
+        // hanya kerana komponen paparan tertentu mengalami ralat.
+        document.documentElement.classList.remove('portal-content-pending');
+      }
+    };
+
+    const separator=PORTAL_CONTENT_API_URL.includes('?')?'&':'?';
+    const cacheBuster=Date.now()+'_'+attempt+'_'+Math.floor(Math.random()*1000000);
+    script.async=true;
+    script.src=PORTAL_CONTENT_API_URL+separator+
+      'api=1&callback='+encodeURIComponent(callback)+'&_='+cacheBuster;
+    script.onerror=()=>fail('Ralat memuatkan skrip JSONP.');
+    timer=setTimeout(()=>fail('Timeout selepas '+REQUEST_TIMEOUT_MS+' ms.'),REQUEST_TIMEOUT_MS);
+    document.head.appendChild(script);
+  }
+
+  runAttempt();
 }
 
 // Theme and accessible font controls.
